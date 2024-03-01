@@ -1,2 +1,1 @@
-# MJC_SW_Winter
-Winter special lecture.
+명지전문대학교 소프트웨어콘텐츠과 재학 캡스톤디자인2 시간에 제작한 콘텐츠
