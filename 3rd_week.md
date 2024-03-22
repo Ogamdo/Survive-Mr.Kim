@@ -17,17 +17,23 @@
 그 전에는 디자인과 기획의 참고자료를 조사하자.</p>
 
 제출
-1.카페와 이클래스 둘 다 늦지 않게 내자.
+<p>1.카페와 이클래스 둘 다 늦지 않게 내자.
 2.파일형식을 반드시 맞추자. 
 3.디자인 조사 등에서 스크린샷으로 사진을 잘 찍어서 제출하자. 
 3-1 무엇을 어떻게 추출할지도 잘 정리하자.
 3-2 프로젝트의 컨셉에 맞는 디자인을 해야하며, 그를 위해서 3주간 조사를 한다. '그냥 좋아서'는 안된다. 왜 골랐는지 이유를 말할 수 있어야 한다. 
 어떻게, 왜?
-<img width="609" alt="image" src="https://github.com/Ogamdo/You-must-survive-office-worker-/assets/91306764/e61ba02b-0c0a-45c2-a3d1-b296afe6861d">
+<</p>
+<img width="613" alt="image" src="https://github.com/Ogamdo/You-must-survive-office-worker-/assets/91306764/db4509ac-9eab-4731-a772-289f4a763d73">
+
 
 
 프로젝트 참고조사 
-1.상품성-콘셉트 (입찰공고나 연구비 지원내용 등 찾아보자. 기능성게임 제작사와 컨택도 가능하다)
+<p>1.상품성-콘셉트 (입찰공고나 연구비 지원내용 등 찾아보자. 기능성게임 제작사와 컨택도 가능하다) 
+1-1 이미지&&동영상 링크 
 2.완결성-스토리
-3.지속성 - 플레이 
+3.지속성 - 플레이 </p>
+
 <img width="610" alt="image" src="https://github.com/Ogamdo/You-must-survive-office-worker-/assets/91306764/ef0d4739-bb79-4af7-8e8b-f3184d64886c" >
+
+
