@@ -16,3 +16,7 @@
 비고사항 : 기획서에 아무 생각 없이 써놓은 '집에 가서 치킨 먹자'가 생각보다 반응이 좋으므로, 플레이어블 캐릭터는 사람으로 합시다.
 초식동물이나 조류 캐릭터가 그런 컨셉이면 뭔가 좀...그래...
 
+![image](https://github.com/Ogamdo/You-must-survive-office-worker-/assets/91306764/1ce4dbf6-c02f-4e3b-af71-71022e01b521)
+
+![image](https://github.com/Ogamdo/You-must-survive-office-worker-/assets/91306764/fc48aa10-8740-48bc-a100-724164fdd458)
+![image](https://github.com/Ogamdo/You-must-survive-office-worker-/assets/91306764/5e3b2f70-75dd-47cf-b283-708a57ce053e)
