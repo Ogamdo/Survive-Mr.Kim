@@ -6,7 +6,7 @@ public class CamMove : MonoBehaviour
 {
     public Transform target;
     float dist = 4.0f;
-    float height = 6.0f;
+    float height = 10.0f;
     Transform tr;
     void Start()
     {
