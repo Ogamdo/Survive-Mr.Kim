@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewBehaviourScript : MonoBehaviour
+public class FireSpawn : MonoBehaviour
 {
     public GameObject rangeObject;
     BoxCollider rangeCollider;
@@ -18,7 +18,7 @@ public class NewBehaviourScript : MonoBehaviour
     Vector3 Return_RandomPosition()
     {
         Vector3 originPosition = rangeObject.transform.position;
-        // Äİ¶óÀÌ´õÀÇ »çÀÌÁî¸¦ °¡Á®¿À´Â bound.size »ç¿ë
+        // ì½œë¼ì´ë”ì˜ ì‚¬ì´ì¦ˆë¥¼ ê°€ì ¸ì˜¤ëŠ” bound.size ì‚¬ìš©
         float range_X = rangeCollider.bounds.size.x;
         float range_Z = rangeCollider.bounds.size.z;
 
@@ -41,7 +41,7 @@ public class NewBehaviourScript : MonoBehaviour
         //  {
         //  yield return new WaitForSeconds(1f);
 
-        // »ı¼º À§Ä¡ ºÎºĞ¿¡ À§¿¡¼­ ¸¸µç ÇÔ¼ö Return_RandomPosition() ÇÔ¼ö ´ëÀÔ
+        // ìƒì„± ìœ„ì¹˜ ë¶€ë¶„ì— ìœ„ì—ì„œ ë§Œë“  í•¨ìˆ˜ Return_RandomPosition() í•¨ìˆ˜ ëŒ€ì…
         // GameObject instantCapsul = Instantiate(Sphere, Return_RandomPosition(), Quaternion.identity);
        // }
 
@@ -49,7 +49,7 @@ public class NewBehaviourScript : MonoBehaviour
 
         for (int i = 0; i < numberOfSpawns; i++)
         {
-            // »ı¼º À§Ä¡ ºÎºĞ¿¡ À§¿¡¼­ ¸¸µç ÇÔ¼ö Return_RandomPosition() ÇÔ¼ö ´ëÀÔ
+            // ìƒì„± ìœ„ì¹˜ ë¶€ë¶„ì— ìœ„ì—ì„œ ë§Œë“  í•¨ìˆ˜ Return_RandomPosition() í•¨ìˆ˜ ëŒ€ì…
             GameObject instantCapsul = Instantiate(Sphere, Return_RandomPosition(), Quaternion.identity);
         }
 
