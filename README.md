@@ -14,6 +14,7 @@
 허강진	2020662026	디자인
 이진이	2021661082	디자인
 
+구글 드라이브 : https://drive.google.com/drive/folders/1kxWbvYGu_dlJw1uOA0m6utseZ2IlXV8v
 
 - 프로젝트명 : 살아남아라 회사원이여
 
