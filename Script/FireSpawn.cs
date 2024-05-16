@@ -21,11 +21,6 @@ public class NewBehaviourScript : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     void SpawnFire()
     {
         // BoxCollider의 범위 내에서 랜덤한 위치를 계산합니다.
@@ -33,7 +28,8 @@ public class NewBehaviourScript : MonoBehaviour
 
         // 파티클 프리팹을 생성합니다.
         GameObject fireInstance = Instantiate(firePrefab, randomPosition, Quaternion.identity);
-        fireInstance.AddComponent<FireController>(); // FireController 스크립트를 추가하여 소멸 로직을 처리합니다.
+        // FireController 스크립트를 추가하여 파티클 충돌을 처리하고 파괴를 처리합니다.
+        fireInstance.AddComponent<FireController>();
     }
 
     Vector3 GetRandomPositionInBox(BoxCollider box)

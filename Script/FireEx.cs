@@ -9,13 +9,6 @@ public class FireEx : MonoBehaviour
     private ParticleSystem steamParticleSystem; // 파티클 시스템
     private bool isSteamActive = false; // 파티클 활성 상태
 
-
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void Update()
     {
         // 마우스 우클릭을 유지하고 있는 경우
@@ -42,6 +35,9 @@ public class FireEx : MonoBehaviour
         steamInstance = Instantiate(steamPrefab, position, rotation, transform);
         steamParticleSystem = steamInstance.GetComponent<ParticleSystem>();
         isSteamActive = true;
+
+        // 파티클 생성시 FireController 스크립트를 추가합니다.
+        steamInstance.AddComponent<FireController>();
     }
 
     void StopSteam()
