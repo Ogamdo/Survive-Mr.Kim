@@ -3,21 +3,21 @@ using UnityEngine.UI;
 
 public class GameTimer : MonoBehaviour
 {
-    public float playTimeLimit = 60.0f;  // ì„¤ì •ëœ ì‹œê°„ (ì´ˆ ë‹¨ìœ„)
+    public float playTimeLimit = 60.0f;  // ¼³Á¤µÈ ½Ã°£ (ÃÊ ´ÜÀ§)
     private bool isGameActive = true;
     private GameManager gameManager;
-    public Text timerText;  // UI Text ìš”ì†Œë¥¼ ì°¸ì¡°
+    public Text timerText;  // UI Text ¿ä¼Ò¸¦ ÂüÁ¶
 
     void Start()
     {
-        // GameManager ì˜¤ë¸Œì íŠ¸ë¥¼ ì°¾ìŠµë‹ˆë‹¤.
+        // GameManager ¿ÀºêÁ§Æ®¸¦ Ã£½À´Ï´Ù.
         gameManager = FindObjectOfType<GameManager>();
         if (timerText == null)
         {
-            Debug.LogError("TimerTextê°€ ì„¤ì •ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
+            Debug.LogError("TimerText°¡ ¼³Á¤µÇÁö ¾Ê¾Ò½À´Ï´Ù.");
         }
 
-        UpdateTimerUI(); // ì´ˆê¸°í™” ì‹œ ì„¤ì •ëœ ì‹œê°„ì„ í‘œì‹œ
+        UpdateTimerUI(); // ÃÊ±âÈ­ ½Ã ¼³Á¤µÈ ½Ã°£À» Ç¥½Ã
     }
 
     void UpdateTimerUI()
@@ -47,9 +47,9 @@ public class GameTimer : MonoBehaviour
     void EndGame()
     {
         isGameActive = false;
-        Debug.Log("ê²Œì„ ì¢…ë£Œ! ì œí•œ ì‹œê°„ì´ ì´ˆê³¼ë˜ì—ˆìŠµë‹ˆë‹¤.");
+        Debug.Log("°ÔÀÓ Á¾·á! Á¦ÇÑ ½Ã°£ÀÌ ÃÊ°úµÇ¾ú½À´Ï´Ù.");
 
-        // GameManagerì˜ EndGame ë©”ì„œë“œë¥¼ í˜¸ì¶œí•˜ì—¬ UIë¥¼ í™œì„±í™”í•©ë‹ˆë‹¤.
+        // GameManagerÀÇ EndGame ¸Ş¼­µå¸¦ È£ÃâÇÏ¿© UI¸¦ È°¼ºÈ­ÇÕ´Ï´Ù.
         if (gameManager != null)
         {
             gameManager.EndGame();
@@ -58,14 +58,19 @@ public class GameTimer : MonoBehaviour
 
     public void RestartGame()
     {
-        playTimeLimit = 60.0f; // ì„¤ì •ëœ ì‹œê°„ì„ ë‹¤ì‹œ ì´ˆê¸°í™”
+        playTimeLimit = 60.0f; // ¼³Á¤µÈ ½Ã°£À» ´Ù½Ã ÃÊ±âÈ­
         isGameActive = true;
-        UpdateTimerUI();  // UI ì—…ë°ì´íŠ¸
+        UpdateTimerUI();  // UI ¾÷µ¥ÀÌÆ®
     }
 
     public void SetPlayTimeLimit(float newLimit)
     {
         playTimeLimit = newLimit;
-        UpdateTimerUI();  // ìƒˆ ì œí•œ ì‹œê°„ì— ë”°ë¼ UI ì—…ë°ì´íŠ¸
+        UpdateTimerUI();  // »õ Á¦ÇÑ ½Ã°£¿¡ µû¶ó UI ¾÷µ¥ÀÌÆ®
+    }
+
+    public bool IsGameActive()
+    {
+        return isGameActive;
     }
 }
