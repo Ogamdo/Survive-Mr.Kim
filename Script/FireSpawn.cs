@@ -2,66 +2,52 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FireSpawn : MonoBehaviour
+public class NewBehaviourScript : MonoBehaviour
 {
-    public GameObject rangeObject;
- BoxCollider rangeCollider;
+    public GameObject firePrefab; // ÆÄÆ¼Å¬ ÇÁ¸®ÆÕ
+    public int minFireCount = 1;  // ÃÖ¼Ò »ı¼º °¹¼ö
+    public int maxFireCount = 10; // ÃÖ´ë »ı¼º °¹¼ö
+    public BoxCollider spawnRange; // FireSpawnRange BoxCollider
 
- public GameObject Sphere;
- public GameObject Explore;
- private bool hasExplored = false;
+    // Start is called before the first frame update
+    void Start()
+    {
+        // ÆÄÆ¼Å¬À» ·£´ıÇÑ °¹¼ö·Î »ı¼ºÇÕ´Ï´Ù.
+        int fireCount = Random.Range(minFireCount, maxFireCount);
 
- private void Awake()
- {
-     rangeCollider = rangeObject.GetComponent<BoxCollider>();
- }
+        for (int i = 0; i < fireCount; i++)
+        {
+            SpawnFire();
+        }
+    }
 
- Vector3 Return_RandomPosition()
- {
-     Vector3 originPosition = rangeObject.transform.position;
-     // ì½œë¼ì´ë”ì˜ ì‚¬ì´ì¦ˆë¥¼ ê°€ì ¸ì˜¤ëŠ” bound.size ì‚¬ìš©
-     float range_X = rangeCollider.bounds.size.x;
-     float range_Z = rangeCollider.bounds.size.z;
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+    void SpawnFire()
+    {
+        // BoxColliderÀÇ ¹üÀ§ ³»¿¡¼­ ·£´ıÇÑ À§Ä¡¸¦ °è»êÇÕ´Ï´Ù.
+        Vector3 randomPosition = GetRandomPositionInBox(spawnRange);
 
-     range_X = Random.Range((range_X / 2) * -1, range_X / 2);
-     range_Z = Random.Range((range_Z / 2) * -1, range_Z / 2);
-     Vector3 RandomPostion = new Vector3(range_X, 0f, range_Z);
+        // ÆÄÆ¼Å¬ ÇÁ¸®ÆÕÀ» »ı¼ºÇÕ´Ï´Ù.
+        GameObject fireInstance = Instantiate(firePrefab, randomPosition, Quaternion.identity);
+        fireInstance.AddComponent<FireController>(); // FireController ½ºÅ©¸³Æ®¸¦ Ãß°¡ÇÏ¿© ¼Ò¸ê ·ÎÁ÷À» Ã³¸®ÇÕ´Ï´Ù.
+    }
 
-     Vector3 respawnPosition = originPosition + RandomPostion;
-     return respawnPosition;
- }
+    Vector3 GetRandomPositionInBox(BoxCollider box)
+    {
+        Vector3 boxSize = box.size;
+        Vector3 boxCenter = box.center;
 
- private void Start()
- {
-     StartCoroutine(RandomRespawn_Coroutine());
- }
+        // BoxColliderÀÇ ·ÎÄÃ ÁÂÇ¥¸¦ ±Û·Î¹ú ÁÂÇ¥·Î º¯È¯
+        Vector3 randomPosition = new Vector3(
+            Random.Range(boxCenter.x - boxSize.x / 2, boxCenter.x + boxSize.x / 2),
+            Random.Range(boxCenter.y - boxSize.y / 2, boxCenter.y + boxSize.y / 2),
+            Random.Range(boxCenter.z - boxSize.z / 2, boxCenter.z + boxSize.z / 2)
+        );
 
- IEnumerator RandomRespawn_Coroutine()
- {
-     //while (true)
-     //  {
-     //  yield return new WaitForSeconds(1f);
-
-     // ìƒì„± ìœ„ì¹˜ ë¶€ë¶„ì— ìœ„ì—ì„œ ë§Œë“  í•¨ìˆ˜ Return_RandomPosition() í•¨ìˆ˜ ëŒ€ì…
-     // GameObject instantCapsul = Instantiate(Sphere, Return_RandomPosition(), Quaternion.identity);
-     // }
-
-    
-     if (!hasExplored)
-     {
-         int numberOfSpawns = Random.Range(1, 5);
-
-         for (int i = 0; i < numberOfSpawns; i++)
-         {
-             GameObject instantCapsul = Instantiate(Sphere, Return_RandomPosition(), Quaternion.identity);
-
-         }
-
-         GameObject instantExplore = Instantiate(Explore, Return_RandomPosition(), Quaternion.identity);
-         hasExplored = true;
-
-         yield break;
-     }
-    
- }
+        return box.transform.TransformPoint(randomPosition);
+    }
 }
