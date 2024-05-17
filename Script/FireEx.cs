@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class FireEx : MonoBehaviour
 {
-    public GameObject steamPrefab; // 파티클 프리팹
-    private GameObject steamInstance; // 생성된 파티클 인스턴스
-    private ParticleSystem steamParticleSystem; // 파티클 시스템
-    private bool isSteamActive = false; // 파티클 활성 상태
+    public GameObject steamPrefab; 
+    private GameObject steamInstance;
+    private ParticleSystem steamParticleSystem; 
+    private bool isSteamActive = false; 
 
     void Update()
     {
-        // 마우스 우클릭을 유지하고 있는 경우
+        
         if (Input.GetMouseButton(1))
         {
             if (!isSteamActive)

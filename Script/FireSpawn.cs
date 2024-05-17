@@ -7,7 +7,7 @@ public class NewBehaviourScript : MonoBehaviour
     public GameObject firePrefab; 
     public int minFireCount = 1;  
     public int maxFireCount = 10; 
-    public BoxCollider spawnRange; // FireSpawnRange BoxCollider
+    public BoxCollider spawnRange; 
 
     // Start is called before the first frame update
     void Start()

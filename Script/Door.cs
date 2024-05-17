@@ -48,22 +48,22 @@ public class Door : MonoBehaviour
         Vector3 endPosition = startPosition + (leftmoveDirection * moveDistance);
         Vector3 endPosition2 = startPosition2 + (rightmoveDirection * moveDistance);
         float elapsedTime = 0;
-        float timeToReturn = 5f; // 이동 후 되돌아갈 시간
+        float timeToReturn = 5f; 
 
         while (elapsedTime < moveDuration)
         {
-            // 이동
+           
             leftmovableObject.transform.position = Vector3.Lerp(startPosition, endPosition, elapsedTime / moveDuration);
             rightmovableObject.transform.position = Vector3.Lerp(startPosition2, endPosition2, elapsedTime / moveDuration);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
-        // 이동 완료 후 대기
+      
         yield return new WaitForSeconds(timeToReturn);
 
-        // 되돌아가기
-        float returnDuration = 1.0f; // 되돌아가는 시간
+    
+        float returnDuration = 1.0f; 
         float returnElapsedTime = 0;
 
         while (returnElapsedTime < returnDuration)
@@ -74,7 +74,7 @@ public class Door : MonoBehaviour
             yield return null;
         }
 
-        // 되돌아가기 완료 후 최종 위치 설정
+        
         leftmovableObject.transform.position = startPosition;
         rightmovableObject.transform.position = startPosition2;
     }
