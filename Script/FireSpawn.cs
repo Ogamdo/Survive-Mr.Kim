@@ -11,7 +11,7 @@ public class NewBehaviourScript : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {.
+    {
         int fireCount = Random.Range(minFireCount, maxFireCount);
 
         for (int i = 0; i < fireCount; i++)
@@ -46,3 +46,4 @@ public class NewBehaviourScript : MonoBehaviour
         return box.transform.TransformPoint(randomPosition);
     }
 }
+

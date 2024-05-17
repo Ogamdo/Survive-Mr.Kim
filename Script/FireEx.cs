@@ -36,8 +36,6 @@ public class FireEx : MonoBehaviour
         steamParticleSystem = steamInstance.GetComponent<ParticleSystem>();
         isSteamActive = true;
 
-        // 파티클 생성시 FireController 스크립트를 추가합니다.
-        steamInstance.AddComponent<FireController>();
     }
 
     void StopSteam()
