@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class FireEx : MonoBehaviour
 {
-    public GameObject steamPrefab; // ÆÄÆ¼Å¬ ÇÁ¸®ÆÕ
-    private GameObject steamInstance; // »ı¼ºµÈ ÆÄÆ¼Å¬ ÀÎ½ºÅÏ½º
-    private ParticleSystem steamParticleSystem; // ÆÄÆ¼Å¬ ½Ã½ºÅÛ
-    private bool isSteamActive = false; // ÆÄÆ¼Å¬ È°¼º »óÅÂ
+    public GameObject steamPrefab; // íŒŒí‹°í´ í”„ë¦¬íŒ¹
+    private GameObject steamInstance; // ìƒì„±ëœ íŒŒí‹°í´ ì¸ìŠ¤í„´ìŠ¤
+    private ParticleSystem steamParticleSystem; // íŒŒí‹°í´ ì‹œìŠ¤í…œ
+    private bool isSteamActive = false; // íŒŒí‹°í´ í™œì„± ìƒíƒœ
+    public Transform playerTransform; // í”Œë ˆì´ì–´ Transformì„ ì°¸ì¡°í•˜ê¸° ìœ„í•œ ë³€ìˆ˜
 
     void Update()
     {
-        // ¸¶¿ì½º ¿ìÅ¬¸¯À» À¯ÁöÇÏ°í ÀÖ´Â °æ¿ì
+        // ë§ˆìš°ìŠ¤ ìš°í´ë¦­ì„ ìœ ì§€í•˜ê³  ìˆëŠ” ê²½ìš°
         if (Input.GetMouseButton(1))
         {
             if (!isSteamActive)
@@ -31,12 +32,13 @@ public class FireEx : MonoBehaviour
     void StartSteam()
     {
         Vector3 position = transform.position;
-        Quaternion rotation = transform.rotation * Quaternion.Euler(0, 90, 0); // YÃàÀ¸·Î 90µµ È¸Àü
+        Quaternion rotation = playerTransform.rotation; // í”Œë ˆì´ì–´ì˜ í˜„ì¬ íšŒì „ ê°’
+
         steamInstance = Instantiate(steamPrefab, position, rotation, transform);
         steamParticleSystem = steamInstance.GetComponent<ParticleSystem>();
         isSteamActive = true;
 
-        // ÆÄÆ¼Å¬ »ı¼º½Ã FireController ½ºÅ©¸³Æ®¸¦ Ãß°¡ÇÕ´Ï´Ù.
+        // íŒŒí‹°í´ ìƒì„±ì‹œ FireController ìŠ¤í¬ë¦½íŠ¸ë¥¼ ì¶”ê°€í•©ë‹ˆë‹¤.
         steamInstance.AddComponent<FireController>();
     }
 
@@ -48,5 +50,15 @@ public class FireEx : MonoBehaviour
             Destroy(steamInstance, steamParticleSystem.main.startLifetime.constantMax);
         }
         isSteamActive = false;
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        // Player íƒœê·¸ë¥¼ ê°€ì§„ ê²Œì„ì˜¤ë¸Œì íŠ¸ì™€ ì¶©ëŒí•œ ê²½ìš°
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            // FireEx ì˜¤ë¸Œì íŠ¸ë¥¼ Player ì˜¤ë¸Œì íŠ¸ì˜ ìì‹ìœ¼ë¡œ ì„¤ì •
+            transform.SetParent(collision.transform);
+        }
     }
 }
