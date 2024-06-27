@@ -24,5 +24,6 @@
 장르	탈출, 퍼즐, 기능성(공공)
 시점	탑뷰(Top View)
 
+진행기간 : 2024학년도 1학기 ~ 2학기 (2024.03.09~2024.12.15)
 
-https://drive.google.com/drive/folders/1kxWbvYGu_dlJw1uOA0m6utseZ2IlXV8v
+
