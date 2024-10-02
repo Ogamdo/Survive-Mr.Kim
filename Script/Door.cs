@@ -19,6 +19,7 @@ public class Door : MonoBehaviour
     }
 
     // Update is called once per frame
+    // 유니티의 Raycast 시스템을 이용해서 화면내에서 특정 오브젝트를 좌클릭시에 MoveObject()메서드를 발동시켜서 문의 transform을 움직이게한다. 
     void Update()
     {
  
@@ -41,6 +42,7 @@ public class Door : MonoBehaviour
         }
     }
 
+    //MoveObject는 왼쪽 오른쪽의 움직임을 담당하게 된다. 소요시간을 설정함으로써 문이 열리는 소요시간과 다시 닫히는 시간을 정해둔다.
     IEnumerator MoveObject()
     {
         Vector3 startPosition = leftmovableObject.transform.position;
