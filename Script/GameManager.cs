@@ -3,26 +3,26 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject youDiedText;
+    //public GameObject youDiedText;
     public GameObject retryButton;
 
     private void Start()
     {
-        // ÃÊ±â »óÅÂ¿¡¼­ UI ºñÈ°¼ºÈ­
+        // ï¿½Ê±ï¿½ ï¿½ï¿½ï¿½Â¿ï¿½ï¿½ï¿½ UI ï¿½ï¿½È°ï¿½ï¿½È­
         youDiedText.SetActive(false);
         retryButton.SetActive(false);
     }
 
     public void EndGame()
     {
-        // °ÔÀÓ Á¾·á ½Ã UI È°¼ºÈ­
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ UI È°ï¿½ï¿½È­
         youDiedText.SetActive(true);
         retryButton.SetActive(true);
     }
 
     public void Retry()
     {
-        // Æ¯Á¤ ¾ÀÀ¸·Î ÀÌµ¿
+        // Æ¯ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
         SceneManager.LoadScene("SampleScene");
     }
 }
