@@ -4,14 +4,17 @@ using UnityEngine;
 
 public class FireEx : MonoBehaviour
 {
-    public GameObject steamPrefab; 
-    private GameObject steamInstance;
-    private ParticleSystem steamParticleSystem; 
-    private bool isSteamActive = false; 
+    public GameObject steamPrefab; // 파티클 프리팹
+    private GameObject steamInstance; // 생성된 파티클 인스턴스
+    private ParticleSystem steamParticleSystem; // 파티클 시스템
+    private bool isSteamActive = false; // 파티클 활성 상태
+    private bool isActive = false; // FireEx 활성 상태
 
     void Update()
     {
-        //이중 if 문을 통해 마우스 우클릭시면서 isSteamActive가 false일때  StartSteam 메서드 작동
+        if (!isActive) return; // 활성화되지 않은 경우 작동하지 않음
+
+        // 마우스 우클릭을 유지하고 있는 경우
         if (Input.GetMouseButton(1))
         {
             if (!isSteamActive)
@@ -19,7 +22,6 @@ public class FireEx : MonoBehaviour
                 StartSteam();
             }
         }
-        //우클릭 상태가 아닐경우이면서 isSteamActive가 ture일때  StopSteam()메서드 작동
         else
         {
             if (isSteamActive)
@@ -29,22 +31,19 @@ public class FireEx : MonoBehaviour
         }
     }
 
-    //현재 오브젝트의 position값을 월드 자표로 가져와서 스팀을 생성할 위치를 설정한다,(스팀 오브젝트를 y축 90도 회전을 해서 발생시킨다)
-    //steamInstance는 스팀프리펩을 현재 오브젝트의 자식으로 넣고 위치값과 회전값을 저장하는 변수이다.
-    //steamParticleSysten 변수는  파티클 시스템 컴포넌트플 steamInstance에 넣는다
-
-    void StartSteam()
+    public void StartSteam()
     {
-        Vector3 position = transform.position;
-        Quaternion rotation = transform.rotation * Quaternion.Euler(0, 90, 0); // Y축으로 90도 회전
+        Vector3 position = transform.position + new Vector3(0, 1f, 0); // Y축으로 1 높게
+        Quaternion rotation = transform.rotation * Quaternion.Euler(60, 90, 0); // 회전
         steamInstance = Instantiate(steamPrefab, position, rotation, transform);
         steamParticleSystem = steamInstance.GetComponent<ParticleSystem>();
         isSteamActive = true;
 
+        // 파티클 생성시 FireController 스크립트를 추가합니다.
+        steamInstance.AddComponent<FireController>();
     }
 
-    //steamParticleSystem이 null이 아닌경우에 작동하며 작동하게되면 steamParticleSystem을 중지시키고 일정시간이 지나면 파괴시킨다
-    void StopSteam()
+    public void StopSteam()
     {
         if (steamParticleSystem != null)
         {
@@ -53,4 +52,11 @@ public class FireEx : MonoBehaviour
         }
         isSteamActive = false;
     }
+
+
+    public void Activate()
+    {
+        isActive = true;
+    }
+
 }

@@ -3,28 +3,23 @@ using UnityEngine.UI;
 
 public class GameTimer : MonoBehaviour
 {
-    public float playTimeLimit = 60.0f;  // ¼³Á¤µÈ ½Ã°£ (ÃÊ ´ÜÀ§)
-    private bool isGameActive = true;
+    public float playTimeLimit = 60.0f;  // ê²Œì„ ì‹œê°„ (ì´ˆ ë‹¨ìœ„)
+    private bool isGameActive = false;  // ì´ˆê¸° ìƒíƒœë¥¼ falseë¡œ ë³€ê²½
     private GameManager gameManager;
-    public Text timerText;  // UI Text ¿ä¼Ò¸¦ ÂüÁ¶
+    public Text timerText;  // UI Text ê°ì²´ë¥¼ ì°¸ì¡°
 
     void Start()
     {
-        // GameManager ¿ÀºêÁ§Æ®¸¦ Ã£½À´Ï´Ù.
+        // GameManager ê°ì²´ë¥¼ ì°¾ìŠµë‹ˆë‹¤.
         gameManager = FindObjectOfType<GameManager>();
-        if (timerText == null)
-        {
-            Debug.LogError("TimerText°¡ ¼³Á¤µÇÁö ¾Ê¾Ò½À´Ï´Ù.");
-        }
-
-        UpdateTimerUI(); // ÃÊ±âÈ­ ½Ã ¼³Á¤µÈ ½Ã°£À» Ç¥½Ã
+        UpdateTimerUI(); // ì´ˆê¸°í™” ì‹œ ì‹œê°„ì„ í‘œì‹œí•©ë‹ˆë‹¤.
     }
 
     void UpdateTimerUI()
     {
         if (timerText != null)
         {
-            timerText.text = "Time Limit : " + Mathf.CeilToInt(playTimeLimit).ToString() + "s";
+            timerText.text = Mathf.CeilToInt(playTimeLimit).ToString();
         }
     }
 
@@ -47,9 +42,9 @@ public class GameTimer : MonoBehaviour
     void EndGame()
     {
         isGameActive = false;
-        Debug.Log("°ÔÀÓ Á¾·á! Á¦ÇÑ ½Ã°£ÀÌ ÃÊ°úµÇ¾ú½À´Ï´Ù.");
+        Debug.Log("ê²Œì„ ì¢…ë£Œ! ì‹œê°„ì´ ì´ˆê³¼ë˜ì—ˆìŠµë‹ˆë‹¤.");
 
-        // GameManagerÀÇ EndGame ¸Ş¼­µå¸¦ È£ÃâÇÏ¿© UI¸¦ È°¼ºÈ­ÇÕ´Ï´Ù.
+        // GameManagerì˜ EndGame ë©”ì„œë“œë¥¼ í˜¸ì¶œí•˜ì—¬ UIë¥¼ ë¹„í™œì„±í™”í•©ë‹ˆë‹¤.
         if (gameManager != null)
         {
             gameManager.EndGame();
@@ -58,19 +53,24 @@ public class GameTimer : MonoBehaviour
 
     public void RestartGame()
     {
-        playTimeLimit = 60.0f; // ¼³Á¤µÈ ½Ã°£À» ´Ù½Ã ÃÊ±âÈ­
+        playTimeLimit = 60.0f; // ê²Œì„ ì‹œê°„ì„ ë‹¤ì‹œ ì´ˆê¸°í™”
         isGameActive = true;
-        UpdateTimerUI();  // UI ¾÷µ¥ÀÌÆ®
+        UpdateTimerUI();  // UI ì—…ë°ì´íŠ¸
     }
 
     public void SetPlayTimeLimit(float newLimit)
     {
         playTimeLimit = newLimit;
-        UpdateTimerUI();  // »õ Á¦ÇÑ ½Ã°£¿¡ µû¶ó UI ¾÷µ¥ÀÌÆ®
+        UpdateTimerUI();  // ìƒˆ ì‹œê°„ ì œí•œì„ ì„¤ì •í•˜ê³  UI ì—…ë°ì´íŠ¸
     }
 
     public bool IsGameActive()
     {
         return isGameActive;
+    }
+
+    public void StartTimer()
+    {
+        isGameActive = true;
     }
 }

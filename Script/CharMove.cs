@@ -26,7 +26,7 @@ public class CharMove : MonoBehaviour
         if (gameTimer != null && !gameTimer.IsGameActive())
         {
             anim.SetBool("Walk", false);
-            return;  // 게임이 활성 상태가 아니면 움직임을 멈춥니다.
+            return;
         }
 
         hAxis = Input.GetAxisRaw("Horizontal");
@@ -41,5 +41,10 @@ public class CharMove : MonoBehaviour
         {
             transform.LookAt(transform.position + moveVec);
         }
+    }
+
+    public void SetSpeed(float newSpeed)
+    {
+        speed = newSpeed;
     }
 }

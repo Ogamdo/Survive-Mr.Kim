@@ -4,80 +4,143 @@ using UnityEngine;
 
 public class Door : MonoBehaviour
 {
-    public GameObject leftmovableObject;
-    public GameObject rightmovableObject;
+    public GameObject[] leftmovableObjects;
+    public GameObject[] rightmovableObjects;
 
     public Vector3 rightmoveDirection = new Vector3(0, 0, -2);
     public Vector3 leftmoveDirection = new Vector3(0, 0, 2);
-    public float moveDistance = 1.0f; 
-    public float moveDuration = 1.0f; 
+    public float moveDistance = 1.0f;
+    public float moveDuration = 1.0f;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        // 게임 시작과 동시에 문 열리기
+        StartCoroutine(MoveObject());
     }
 
     // Update is called once per frame
-    // 유니티의 Raycast 시스템을 이용해서 화면내에서 특정 오브젝트를 좌클릭시에 MoveObject()메서드를 발동시켜서 문의 transform을 움직이게한다. 
     void Update()
     {
- 
-        if (Input.GetMouseButtonDown(0))
-        {
-           
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
+        // Fire 이름을 가진 오브젝트들이 있는지 확인
+        GameObject[] allObjects = FindObjectsOfType<GameObject>();
+        bool fireObjectExists = false;
 
-            
-            if (Physics.Raycast(ray, out hit))
+        foreach (GameObject obj in allObjects)
+        {
+            if (obj.name == "LargeFlames(Clone)")
             {
-             
-                if (hit.transform == transform)
+                fireObjectExists = true;
+                break;
+            }
+        }
+
+        // 디버그 로그 추가
+        Debug.Log("Fire object exists: " + fireObjectExists);
+
+        // Fire 이름을 가진 오브젝트가 없는 경우에만 실행
+        if (!fireObjectExists)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                Debug.Log("Mouse button clicked");
+
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+
+                if (Physics.Raycast(ray, out hit))
                 {
-                 
-                    StartCoroutine(MoveObject());
+                    Debug.Log("Raycast hit something");
+
+                    if (hit.transform == transform)
+                    {
+                        Debug.Log("Raycast hit the target transform");
+                        StartCoroutine(MoveObject());
+                    }
+                }
+                else
+                {
+                    Debug.Log("Raycast did not hit anything");
                 }
             }
         }
+        else
+        {
+            Debug.Log("Fire objects found, action blocked");
+        }
     }
 
-    //MoveObject는 왼쪽 오른쪽의 움직임을 담당하게 된다. 소요시간을 설정함으로써 문이 열리는 소요시간과 다시 닫히는 시간을 정해둔다.
+
     IEnumerator MoveObject()
     {
-        Vector3 startPosition = leftmovableObject.transform.position;
-        Vector3 startPosition2 = rightmovableObject.transform.position;
-        Vector3 endPosition = startPosition + (leftmoveDirection * moveDistance);
-        Vector3 endPosition2 = startPosition2 + (rightmoveDirection * moveDistance);
+        Vector3[] leftStartPositions = new Vector3[leftmovableObjects.Length];
+        Vector3[] rightStartPositions = new Vector3[rightmovableObjects.Length];
+        Vector3[] leftEndPositions = new Vector3[leftmovableObjects.Length];
+        Vector3[] rightEndPositions = new Vector3[rightmovableObjects.Length];
+
+        for (int i = 0; i < leftmovableObjects.Length; i++)
+        {
+            leftStartPositions[i] = leftmovableObjects[i].transform.position;
+            leftEndPositions[i] = leftStartPositions[i] + (leftmoveDirection * moveDistance);
+        }
+
+        for (int i = 0; i < rightmovableObjects.Length; i++)
+        {
+            rightStartPositions[i] = rightmovableObjects[i].transform.position;
+            rightEndPositions[i] = rightStartPositions[i] + (rightmoveDirection * moveDistance);
+        }
+
         float elapsedTime = 0;
-        float timeToReturn = 5f; 
+        float timeToReturn = 5f; // 이동 후 되돌아갈 시간
 
         while (elapsedTime < moveDuration)
         {
-           
-            leftmovableObject.transform.position = Vector3.Lerp(startPosition, endPosition, elapsedTime / moveDuration);
-            rightmovableObject.transform.position = Vector3.Lerp(startPosition2, endPosition2, elapsedTime / moveDuration);
+            for (int i = 0; i < leftmovableObjects.Length; i++)
+            {
+                leftmovableObjects[i].transform.position = Vector3.Lerp(leftStartPositions[i], leftEndPositions[i], elapsedTime / moveDuration);
+            }
+
+            for (int i = 0; i < rightmovableObjects.Length; i++)
+            {
+                rightmovableObjects[i].transform.position = Vector3.Lerp(rightStartPositions[i], rightEndPositions[i], elapsedTime / moveDuration);
+            }
+
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
-      
+        // 이동 완료 후 대기
         yield return new WaitForSeconds(timeToReturn);
 
-    
-        float returnDuration = 1.0f; 
+        // 되돌아가기
+        float returnDuration = 1.0f; // 되돌아가는 시간
         float returnElapsedTime = 0;
 
         while (returnElapsedTime < returnDuration)
         {
-            leftmovableObject.transform.position = Vector3.Lerp(endPosition, startPosition, returnElapsedTime / returnDuration);
-            rightmovableObject.transform.position = Vector3.Lerp(endPosition2, startPosition2, returnElapsedTime / returnDuration);
+            for (int i = 0; i < leftmovableObjects.Length; i++)
+            {
+                leftmovableObjects[i].transform.position = Vector3.Lerp(leftEndPositions[i], leftStartPositions[i], returnElapsedTime / returnDuration);
+            }
+
+            for (int i = 0; i < rightmovableObjects.Length; i++)
+            {
+                rightmovableObjects[i].transform.position = Vector3.Lerp(rightEndPositions[i], rightStartPositions[i], returnElapsedTime / returnDuration);
+            }
+
             returnElapsedTime += Time.deltaTime;
             yield return null;
         }
 
-        
-        leftmovableObject.transform.position = startPosition;
-        rightmovableObject.transform.position = startPosition2;
+        // 되돌아가기 완료 후 최종 위치 설정
+        for (int i = 0; i < leftmovableObjects.Length; i++)
+        {
+            leftmovableObjects[i].transform.position = leftStartPositions[i];
+        }
+
+        for (int i = 0; i < rightmovableObjects.Length; i++)
+        {
+            rightmovableObjects[i].transform.position = rightStartPositions[i];
+        }
     }
 }

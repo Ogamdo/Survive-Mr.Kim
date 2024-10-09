@@ -2,53 +2,77 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewBehaviourScript : MonoBehaviour
+public class FireSpawn : MonoBehaviour
 {
-    public GameObject firePrefab; 
-    public int minFireCount = 1;  
-    public int maxFireCount = 10; 
-    public BoxCollider spawnRange; 
+    public GameObject firePrefab;
+    public int minFireCount = 6;
+    public int maxFireCount = 10;
+    public BoxCollider spawnRange; // FireSpawnRange BoxCollider
+    public float delayBeforeSpawn = 13f; // 불이 생성되기 전 대기 시간
+    public Transform parentObject; // 부모 오브젝트
+    public GameObject objectToDestroy; // 할당할 오브젝트
 
-    // Start is called before the first frame update
+    private GameTimer gameTimer; // GameTimer 객체 참조
+
     void Start()
     {
-        //fireCount는 minFireCount, maxFireCount의 범위내에서 정수를 설정하고 설정된 정수만큼 SpawnFire()메서드를 반복한다.
+        // GameTimer 객체를 찾습니다.
+        gameTimer = FindObjectOfType<GameTimer>();
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        // Player 태그를 가진 게임오브젝트와 충돌한 경우
+        if (other.CompareTag("Player"))
+        {
+            // 타이머를 시작합니다.
+            if (gameTimer != null && !gameTimer.IsGameActive())
+            {
+                gameTimer.StartTimer();
+
+                // 오브젝트를 파괴합니다.
+                if (objectToDestroy != null)
+                {
+                    Destroy(objectToDestroy);
+                }
+            }
+
+            // 13초 후에 불을 생성하는 코루틴 시작
+            StartCoroutine(SpawnFireAfterDelay(delayBeforeSpawn));
+        }
+    }
+
+    IEnumerator SpawnFireAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
         int fireCount = Random.Range(minFireCount, maxFireCount);
 
         for (int i = 0; i < fireCount; i++)
         {
-            SpawnFire();
+            SpawnFire(parentObject);
         }
     }
 
-    void SpawnFire()
+    void SpawnFire(Transform parent)
     {
-       
-        //randomPosition 3차원 변수는 spawnRange로 설정한 3차원 박스내에 범위에서 위치한다.
         Vector3 randomPosition = GetRandomPositionInBox(spawnRange);
+        GameObject fireInstance = Instantiate(firePrefab, randomPosition, Quaternion.identity, parent);
 
-        // firePrefab이 randomPosition 위치에서 회전 없이 생성되고 생성된 오브젝트는 fireInstance라는 변수에 저장한다.
-        //Instantiate은 프리펩을 복제하는함수
-        GameObject fireInstance = Instantiate(firePrefab, randomPosition, Quaternion.identity);
- 
         fireInstance.AddComponent<FireController>();
     }
 
     Vector3 GetRandomPositionInBox(BoxCollider box)
     {
-        //Vector3의 값을 가져온다
         Vector3 boxSize = box.size;
         Vector3 boxCenter = box.center;
 
-        //가져온 박스내의 임의의 위치를 계산하고 Random.Range()안에 설정한 범위를 반환해서 무작위 자표를 설정 
         Vector3 randomPosition = new Vector3(
             Random.Range(boxCenter.x - boxSize.x / 2, boxCenter.x + boxSize.x / 2),
             Random.Range(boxCenter.y - boxSize.y / 2, boxCenter.y + boxSize.y / 2),
             Random.Range(boxCenter.z - boxSize.z / 2, boxCenter.z + boxSize.z / 2)
         );
-        
-        //무작위 자표값이 담긴 randomPosition 변수의 로컬 좌표값을 월드 좌표로 변환
+
         return box.transform.TransformPoint(randomPosition);
     }
 }
-
