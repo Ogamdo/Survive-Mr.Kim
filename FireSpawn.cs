@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Unity.AI.Navigation;
+using UnityEngine.AI;
 public class FireSpawn : MonoBehaviour
 {
     public GameObject firePrefab;
@@ -11,7 +12,7 @@ public class FireSpawn : MonoBehaviour
     public float delayBeforeSpawn = 13f; // 불이 생성되기 전 대기 시간
     public Transform parentObject; // 부모 오브젝트
     public GameObject objectToDestroy; // 할당할 오브젝트
-
+    public PeddlerFollow navMeshUpdater; // NavMeshUpdater 컴포넌트 참조
     private GameTimer gameTimer; // GameTimer 객체 참조
 
     void Start()
@@ -52,12 +53,24 @@ public class FireSpawn : MonoBehaviour
         {
             SpawnFire(parentObject);
         }
+
+        if (navMeshUpdater != null)
+        {
+            navMeshUpdater.UpdateNavMesh();
+        }
+        else
+        {
+            
+        }
     }
 
     void SpawnFire(Transform parent)
     {
         Vector3 randomPosition = GetRandomPositionInBox(spawnRange);
         GameObject fireInstance = Instantiate(firePrefab, randomPosition, Quaternion.identity, parent);
+        // NavMeshObstacle 컴포넌트를 추가하여 네브메쉬에서 장애물로 인식되도록 설정합니다.
+        NavMeshObstacle obstacle = fireInstance.AddComponent<NavMeshObstacle>();
+        obstacle.carving = true;  // 장애물 영역을 네브메쉬에서 제외
 
         fireInstance.AddComponent<FireController>();
     }
