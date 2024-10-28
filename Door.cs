@@ -35,9 +35,6 @@ public class Door : MonoBehaviour
             }
         }
 
-        // 디버그 로그 추가
-        Debug.Log("Fire object exists: " + fireObjectExists);
-
         // Fire 이름을 가진 오브젝트가 없는 경우에만 실행
         if (!fireObjectExists)
         {

@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class CamMove : MonoBehaviour
 {
-   [SerializeField] Transform playerTransform;
+    public Transform playerTransform;
 
-    [SerializeField]float distance = 4.0f;
-    [SerializeField]float height;
-    [SerializeField] float smoothSpeed = 0.125f;
+    public float distance = 4.0f;
+    public float height;
+    public float smoothSpeed = 0.125f;
 
     void FixedUpdate()
     {
