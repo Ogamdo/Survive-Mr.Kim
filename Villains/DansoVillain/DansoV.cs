@@ -1,65 +1,73 @@
 using System;
-using Unity.VisualScripting;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class DansoV : MonoBehaviour
-{   
-    //Namvesh °ü·Ã ¿ÀºêÁ§Æ®µé ¼±¾ğ
-    private NavMeshAgent navAgent; 
-    private float dis; // ´Ü¼Ò¿Í ºô·± »çÀÌÀÇ °Å¸®
-  public Transform dansoTr;//´Ü¼ÒÀÇ positionÀ» ÃßÀûÇÏ±â À§ÇÑ º¯¼ö
-    [SerializeField] GameObject danso;//´Ü¼Ò
-
-    private Transform villainTr; // ºô·±ÀÇ Æ®·£½ºÆû
-   
-    private bool dansoReady; //danso°¡ ºô·± ±ÙÃ³¿¡ ÀÖ´ÂÁö ÆÄ¾ÇÇÑ´Ù.
-   
-    private Rigidbody rb; //dansoÀÇ Rigidbody °¡Á®¿À±â
-    [SerializeField] Vector3 force = new Vector3(3, 1, 100); // ¹°Ã¼¸¦ ¹ß»çÇÒ ÈûÀÇ ¹æÇâ°ú Å©±â ¼³Á¤
+{
+    [SerializeField] float speedRot = 5;
+    
+    private NavMeshAgent nav;
+    private float dis;
+   private Transform tr; // ë¹ŒëŸ°ì˜ í¬ì§€ì…˜
+ 
+    [SerializeField] GameObject danso; // ë‹¨ì†Œ
+    [SerializeField] GameObject player; // í”Œë ˆì´ì–´ ì°¾ê¸°
+    // ë¬¼ì²´ë¥¼ ë°œì‚¬í•  ë°©í–¥
+    [SerializeField] float speed = 10f; // ë¹ŒëŸ°ì˜ ì´ë™ì†ë„
+    [SerializeField] float range = 5.5f; // í”Œë ˆì´ì–´ì—ê²Œ ë‹¨ì†Œë¥¼ ë˜ì§€ëŠ” ê±°ë¦¬
+    //GameManager ë“±ì—ì„œ ì ‘ê·¼í•´ì•¼í•  ìˆ˜ë„ìˆìœ¼ë¯€ë¡œ publicìœ¼ë¡œ ì„ ì–¸
+    public Coroutine tossCoroutine; // ì½”ë£¨í‹´ ì €ì¥
 
     void Start()
-    
-    {   dansoTr = danso.GetComponent<Transform> ();
-        rb = danso.GetComponent<Rigidbody>();
-        dansoReady = true;
-        villainTr = GetComponent<Transform>();
-     
-        navAgent = GetComponent<NavMeshAgent>();
+    {
+        tr = GetComponent<Transform>();
+        nav = GetComponent<NavMeshAgent>();
+        nav.speed = speed; // NavMeshAgentì˜ ì´ë™ ì†ë„ ì„¤ì •
     }
 
     void FixedUpdate()
-    {  
-         if (!dansoReady){
-
-        FindDanso();
-
-            }
-        else if(dansoReady){
-            Throwing();
-
-                }
-      
-    }
-
-    void Throwing()
-        {
-       
-     rb.AddRelativeForce (force, ForceMode.Impulse);
-     dansoReady =false;
-      Debug.Log("dansoready: " + dansoReady);
-        }
-      
-    
-
-    void FindDanso()
     {
-        dis = Vector3.Distance(villainTr.position, dansoTr.position);
-          navAgent.destination = dansoTr.position;  
-        if (dis<1){
-        dansoReady = true;
-          Debug.Log("dansoready: " + dansoReady);
+        dis= Vector3.Distance(player.transform.position, tr.position);
+      if (dis < range)
+        {
+            if (tossCoroutine == null) // ì½”ë£¨í‹´ì´ ì‹¤í–‰ ì¤‘ì´ì§€ ì•Šë‹¤ë©´
+            {
+                tossCoroutine = StartCoroutine(TossDansoCoroutine());
+            }
+        }
+        else
+        {
+            if (tossCoroutine != null) // ì½”ë£¨í‹´ì´ ì‹¤í–‰ ì¤‘ì´ë¼ë©´ ì¤‘ì§€
+            {
+                StopCoroutine(tossCoroutine);
+                tossCoroutine = null;
+            }
+            FindPlayer();
+        }
     }
-        
+
+    void FindPlayer()
+    {
+        nav.SetDestination(player.transform.position); // í”Œë ˆì´ì–´ì˜ ìœ„ì¹˜ë¡œ ëª©í‘œ ì„¤ì •
+      Vector3 direction = (player.transform.position - tr.position).normalized;
+      Quaternion Rotation = Quaternion.LookRotation(direction);
+      tr.rotation = Quaternion.Slerp(tr.rotation, Rotation, Time.deltaTime *speedRot);
+       
+    }
+     IEnumerator TossDansoCoroutine()
+    {
+        while (true) // ë¬´í•œ ë°˜ë³µ
+        {
+            tossDanso(); // ë‹¨ì†Œ ë˜ì§€ê¸°
+            yield return new WaitForSeconds(1f); // 1ì´ˆ ëŒ€ê¸°
+        }
+    }
+
+    void tossDanso()
+    {
+       Vector3 tossPosition = tr.position + tr.forward.normalized;
+        GameObject flyingDanso = Instantiate(danso, tossPosition,tr.rotation);
+       
     }
 }
