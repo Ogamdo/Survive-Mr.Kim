@@ -1,41 +1,48 @@
+
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class TitleUIManager : MonoBehaviour
 {
-     //°ÔÀÓ ¸Ş´º¾ó, ¼¼ °³ÀÇ ¹öÆ°°ú ºÒ·¯¿Ã ¾ÀÀ» ¼±¾ğ
-   public GameObject gameManual;
-   public GameObject credit;
-   public Button Btn_play;
-   public Button Btn_manual;
-   public Button Btn_credit;
-   public GameObject Btn_back;
-   public string play1; // ÀüÈ¯ÇÒ ¾À ÀÌ¸§
+    public GameObject gameManual;
+    public GameObject credit;
+    public Button Btn_play;
+    public Button Btn_manual;
+    public Button Btn_credit;
+    public GameObject Btn_back;
+    public string play1;
 
-   public void Start(){
+    public void Start()
+    {
         gameManual.SetActive(false);
         credit.SetActive(false);
         Btn_back.SetActive(false);
-      
-   }
-   public void OnClickBtn_play(){
-     SceneManager.LoadScene(play1);
-   }
-   public void OnClickBtn_manual(){
-     gameManual.SetActive(true);
-     Btn_back.SetActive(true);
+    }
 
-   }
-   public void OnClickBtn_Credit(){
-     credit.SetActive(true);
-     Btn_back.SetActive(true);
-   }
+    public void OnClickButton(string action)
+    {
+        switch (action)
+        {
+            case "play":
+                SceneManager.LoadScene(play1);
+                break;
+            case "manual":
+                ToggleUI(gameManual, true);
+                break;
+            case "credit":
+                ToggleUI(credit, true);
+                break;
+            case "back":
+                ToggleUI(gameManual, false);
+                ToggleUI(credit, false);
+                break;
+        }
+    }
 
-   public void OnClickBtn_back(){
-   
-     Btn_back.SetActive(false);
-      gameManual.SetActive(false);
-      credit.SetActive(false);
-   }
+    private void ToggleUI(GameObject uiElement, bool isActive)
+    {
+        uiElement.SetActive(isActive);
+        Btn_back.SetActive(isActive); // ë’¤ë¡œ ê°€ê¸° ë²„íŠ¼ ìƒíƒœë¥¼ UI ìš”ì†Œì™€ ë™ê¸°í™”
+    }
 }
