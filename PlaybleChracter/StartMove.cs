@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class StartMove : MonoBehaviour
 {
-   [SerializeField] Transform Point1; // public to [SerializeField]
-   [SerializeField] Transform Point2; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-   [SerializeField] float moveSpeed = 5f; // ï¿½Ìµï¿½ ï¿½Óµï¿½ (ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½)
-    private Animator anim; // Declare Animator
+    public Transform Point1; // ½ÃÀÛ ÁöÁ¡
+    public Transform Point2; // µµÂø ÁöÁ¡
+    public float moveSpeed = 5f; // ÀÌµ¿ ¼Óµµ (´ÜÀ§: À¯´Ö/ÃÊ)
+    private Animator anim; // Animator º¯¼ö Ãß°¡
 
     void Start()
     {
-        // Animator 
+        // Animator ÃÊ±âÈ­
         anim = GetComponent<Animator>();
 
-        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Û°ï¿½ ï¿½ï¿½ï¿½Ã¿ï¿½ ï¿½Ìµï¿½ ï¿½Ú·ï¿½Æ¾ ï¿½ï¿½ï¿½ï¿½
+        // °ÔÀÓ ½ÃÀÛ°ú µ¿½Ã¿¡ ÀÌµ¿ ÄÚ·çÆ¾ ½ÃÀÛ
         StartCoroutine(MoveObject(Point1.position, Point2.position, moveSpeed));
     }
 
@@ -26,14 +26,14 @@ public class StartMove : MonoBehaviour
 
         while (elapsedTime < duration)
         {
-            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½Ìµï¿½
+            // ¿ÀºêÁ§Æ® À§Ä¡¸¦ ÀÌµ¿
             transform.position = Vector3.Lerp(startPoint, endPoint, elapsedTime / duration);
             elapsedTime += Time.deltaTime;
             anim.SetBool("Walk", true);
             yield return null;
         }
 
-        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
+        // ÃÖÁ¾ À§Ä¡ ¼³Á¤
         transform.position = endPoint;
         
     }
