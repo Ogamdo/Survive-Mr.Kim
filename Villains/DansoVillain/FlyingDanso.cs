@@ -7,33 +7,41 @@ public class FlyingDanso : MonoBehaviour
     [SerializeField] float time = 3.0f;
     [SerializeField] Vector3 force = Vector3.zero;
     private Rigidbody rb;
+    private Transform tr;
+    public int speedRot = 100;
+    public float rotAng = 30f;
     
     // Start is called before the first frame update
     void Start()
     {   
         rb = GetComponent<Rigidbody>();
-        rb.AddForce(force, ForceMode.Impulse); // ÈûÀ» Áï½Ã Àû¿ë
-        Destroy(gameObject, time); // ÀÏÁ¤ ½Ã°£ ÈÄ ¿ÀºêÁ§Æ® »èÁ¦
+        tr = GetComponent<Transform>();
+        rb.AddForce(force, ForceMode.Impulse); // í˜ì„ ì¦‰ì‹œ ì ìš©
+        
+        Destroy(gameObject, time); // ì¼ì • ì‹œê°„ í›„ ì˜¤ë¸Œì íŠ¸ ì‚­ì œ
        
         
     }
+    void Update(){
+        tr.Rotate(0, 0, rotAng*speedRot*Time.deltaTime);
+    }
 
-    // Ãæµ¹ ¹ß»ı ½Ã È£ÃâµÇ´Â ¸Ş¼­µå
-    void OnCollisionEnter(Collision collision)
+    // ì¶©ëŒ ë°œìƒ ì‹œ í˜¸ì¶œë˜ëŠ” ë©”ì„œë“œ
+   public void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
             FireEx fireEx = collision.gameObject.GetComponent<FireEx>();
-            Debug.Log("ÇÃ·¹ÀÌ¾î¿Í Ãæµ¹Çß½À´Ï´Ù!");
+            Debug.Log("í”Œë ˆì´ì–´ì™€ ì¶©ëŒí–ˆìŠµë‹ˆë‹¤!");
             if (fireEx != null)
             {
-                fireEx.isSteamActive = false; // Steam ºñÈ°¼ºÈ­
+                fireEx.isSteamActive = false; // Steam ë¹„í™œì„±í™”
             }
-            Destroy(gameObject); // Ãæµ¹ ½Ã Áï½Ã »èÁ¦
+            Destroy(gameObject); // ì¶©ëŒ ì‹œ ì¦‰ì‹œ ì‚­ì œ
         }
         else
         {
-            Destroy(gameObject); // ´Ù¸¥ ¿ÀºêÁ§Æ®¿Í Ãæµ¹ ½Ã Áï½Ã »èÁ¦
+            Destroy(gameObject); // ë‹¤ë¥¸ ì˜¤ë¸Œì íŠ¸ì™€ ì¶©ëŒ ì‹œ ì¦‰ì‹œ ì‚­ì œ
         }
     }
 }
