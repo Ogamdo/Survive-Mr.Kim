@@ -22,7 +22,7 @@ public class FlyingDanso : MonoBehaviour
        
         
     }
-    void Update(){
+    void FixedUpdate(){
         tr.Rotate(0, 0, rotAng*speedRot*Time.deltaTime);
     }
 
