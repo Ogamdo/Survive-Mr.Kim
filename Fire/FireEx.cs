@@ -7,7 +7,7 @@ public class FireEx : MonoBehaviour
     public GameObject steamPrefab; // 파티클 프리팹
     private GameObject steamInstance; // 생성된 파티클 인스턴스
     private ParticleSystem steamParticleSystem; // 파티클 시스템
-    private bool isSteamActive = false; // 파티클 활성 상태
+    public bool isSteamActive = false; // 파티클 활성 상태
     private bool isActive = false; // FireEx 활성 상태
     private int rightClickCount = 0; // 우클릭 횟수 카운트
     private int maxRightClicks = 15; // 최대 우클릭 횟수
