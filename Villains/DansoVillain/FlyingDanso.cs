@@ -16,9 +16,9 @@ public class FlyingDanso : MonoBehaviour
     {   
         rb = GetComponent<Rigidbody>();
         tr = GetComponent<Transform>();
-        rb.AddForce(force, ForceMode.Impulse); // í˜ì„ ì¦‰ì‹œ ì ìš©
+        rb.AddForce(force, ForceMode.Impulse); // ÈûÀ» Áï½Ã Àû¿ë
         
-        Destroy(gameObject, time); // ì¼ì • ì‹œê°„ í›„ ì˜¤ë¸Œì íŠ¸ ì‚­ì œ
+        Destroy(gameObject, time); // ÀÏÁ¤ ½Ã°£ ÈÄ ¿ÀºêÁ§Æ® »èÁ¦
        
         
     }
@@ -26,22 +26,23 @@ public class FlyingDanso : MonoBehaviour
         tr.Rotate(0, 0, rotAng*speedRot*Time.deltaTime);
     }
 
-    // ì¶©ëŒ ë°œìƒ ì‹œ í˜¸ì¶œë˜ëŠ” ë©”ì„œë“œ
-   public void OnCollisionEnter(Collision collision)
+    // Ãæµ¹ ¹ß»ı ½Ã È£ÃâµÇ´Â ¸Ş¼­µå
+   public void OnTriggerEnter(Collider other)
+{
+    if (other.CompareTag("Player"))
     {
-        if (collision.gameObject.CompareTag("Player"))
+        FireEx fireEx = other.GetComponent<FireEx>();
+        Debug.Log("ÇÃ·¹ÀÌ¾î¿Í Ãæµ¹Çß½À´Ï´Ù!");
+        if (fireEx != null)
         {
-            FireEx fireEx = collision.gameObject.GetComponent<FireEx>();
-            Debug.Log("í”Œë ˆì´ì–´ì™€ ì¶©ëŒí–ˆìŠµë‹ˆë‹¤!");
-            if (fireEx != null)
-            {
-                fireEx.isSteamActive = false; // Steam ë¹„í™œì„±í™”
-            }
-            Destroy(gameObject); // ì¶©ëŒ ì‹œ ì¦‰ì‹œ ì‚­ì œ
+            fireEx.isSteamActive = false; // Steam ºñÈ°¼ºÈ­
         }
-        else
-        {
-            Destroy(gameObject); // ë‹¤ë¥¸ ì˜¤ë¸Œì íŠ¸ì™€ ì¶©ëŒ ì‹œ ì¦‰ì‹œ ì‚­ì œ
-        }
+        Destroy(gameObject); // Ãæµ¹ ½Ã Áï½Ã »èÁ¦
     }
+    else
+    {
+        Destroy(gameObject); // ´Ù¸¥ ¿ÀºêÁ§Æ®¿Í Ãæµ¹ ½Ã Áï½Ã »èÁ¦
+    }
+}
+
 }
