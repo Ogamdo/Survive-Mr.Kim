@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -10,39 +9,36 @@ public class TitleUIManager : MonoBehaviour
     public Button Btn_play;
     public Button Btn_manual;
     public Button Btn_credit;
-    public GameObject Btn_back;
-    public string play1;
+    public Button Btn_back;
+    public string playScene;
+
+    private void SetUIActive(GameObject uiElement, bool isActive)
+    {
+        uiElement.SetActive(isActive);
+    }
 
     public void Start()
     {
-        gameManual.SetActive(false);
-        credit.SetActive(false);
-        Btn_back.SetActive(false);
+        SetUIActive(gameManual, false);
+        SetUIActive(credit, false);
+        SetUIActive(Btn_back.gameObject, false);
+
+        Btn_play.onClick.AddListener(() => SceneManager.LoadScene(playScene));
+        Btn_manual.onClick.AddListener(() => {
+            SetUIActive(gameManual, true);
+            SetUIActive(Btn_back.gameObject, true);
+        });
+        Btn_credit.onClick.AddListener(() => {
+            SetUIActive(credit, true);
+            SetUIActive(Btn_back.gameObject, true);
+        });
+        Btn_back.onClick.AddListener(() => HideAllPanels());
     }
 
-    public void OnClickButton(string action)
+    public void HideAllPanels()
     {
-        switch (action)
-        {
-            case "play":
-                SceneManager.LoadScene(play1);
-                break;
-            case "manual":
-                ToggleUI(gameManual, true);
-                break;
-            case "credit":
-                ToggleUI(credit, true);
-                break;
-            case "back":
-                ToggleUI(gameManual, false);
-                ToggleUI(credit, false);
-                break;
-        }
-    }
-
-    private void ToggleUI(GameObject uiElement, bool isActive)
-    {
-        uiElement.SetActive(isActive);
-        Btn_back.SetActive(isActive); // 뒤로 가기 버튼 상태를 UI 요소와 동기화
+        SetUIActive(gameManual, false);
+        SetUIActive(credit, false);
+        SetUIActive(Btn_back.gameObject, false);
     }
 }
