@@ -2,51 +2,104 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayUIManager : TitleUIManager
 {
-    // 단순 회색 창
+    // Required buttons: Resume, Restart, Exit, Sound
+    public Button Btn_resume;
+    public Button Btn_restart;
+    public Button Btn_exit;
+    public Button Btn_sound;
+
+    // Simple gray panel
     public GameObject grayPanel;
     
-    // 체크박스 버튼 세 개
+    // Three checkbox buttons, may need to be accessed by other classes, usually related to specific missions
     public Toggle checkbox1;
     public Toggle checkbox2;
     public Toggle checkbox3;
 
+    // Timer related variables
+    public Text timerText;
+    private float time = 120f;
+    private bool timerRunning = true;
+
+    // Image movement related variables
+    public RectTransform movingImage;
+    public float speed = 100f;
+
     void Start()
     {
-        // 초기화 및 이벤트 추가
-        checkbox1.onValueChanged.AddListener(OnCheckboxChanged);
-        checkbox2.onValueChanged.AddListener(OnCheckboxChanged);
-        checkbox3.onValueChanged.AddListener(OnCheckboxChanged);
+        // Call Start from the parent class
+        base.Start();
 
-        // 창을 초기 상태로 설정 (예: 비활성화)
-        grayPanel.SetActive(false); // 초기에는 창을 비활성화
+        // Initial state setup
+        grayPanel.SetActive(false); // Initially deactivate the gray panel
+
+        // Set button click listeners (using lambda expressions)
+        Btn_resume.onClick.AddListener(() => {
+            grayPanel.SetActive(false);
+            Debug.Log("���� �̾��ϱ�");
+        });
+        Btn_restart.onClick.AddListener(() => {
+    base.OnClickButton("play");
+    Debug.Log("���� �ٽ� ����");
+});
+        Btn_exit.onClick.AddListener(() => {
+            Application.Quit();
+            Debug.Log("���� ����");
+        });
+        Btn_sound.onClick.AddListener(() => {
+            Debug.Log("���� ���� ��ư Ŭ����");
+            AudioListener.volume = AudioListener.volume > 0 ? 0 : 1;
+        });
+
+        // Add checkbox events (using lambda expressions)
+        checkbox1.onValueChanged.AddListener(isChecked => Debug.Log("Checkbox 1: " + isChecked));
+        checkbox2.onValueChanged.AddListener(isChecked => Debug.Log("Checkbox 2: " + isChecked));
+        checkbox3.onValueChanged.AddListener(isChecked => Debug.Log("Checkbox 3: " + isChecked));
+
+        // Set initial timer text
+        UpdateTimerText();
     }
 
     void Update()
     {
-        // UI 업데이트 로직 (필요시 추가)
+        // Decrease time if the timer is running
+        if (timerRunning)
+        {
+            if (timeRemaining > 0)
+            {
+                timeRemaining -= Time.deltaTime;
+                UpdateTimerText();
+            }
+            else
+            {
+                timeRemaining = 0;
+                timerRunning = false;
+                UpdateTimerText();
+                Debug.Log("Time's up!");
+            }
+        }
+
+        // Handle image movement
+        MoveImage();
     }
 
-    private void OnCheckboxChanged(bool isChecked)
+    // Update timer text
+    void UpdateTimerText()
     {
-        Toggle sender = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>();
-        
-        if (sender == checkbox1)
-        {
-            // 체크박스 1의 상태에 따른 행동 정의
-            Debug.Log("Checkbox 1: " + isChecked);
-        }
-        else if (sender == checkbox2)
-        {
-            // 체크박스 2의 상태에 따른 행동 정의
-            Debug.Log("Checkbox 2: " + isChecked);
-        }
-        else if (sender == checkbox3)
-        {
-            // 체크박스 3의 상태에 따른 행동 정의
-            Debug.Log("Checkbox 3: " + isChecked);
-        }
+        int minutes = Mathf.FloorToInt(timeRemaining / 60);
+        int seconds = Mathf.FloorToInt(timeRemaining % 60);
+        timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+    }
+
+    // �̹��� �̵� ó��
+    void MoveImage()
+    {
+        // Move the image from right to left
+        float moveAmount = speed * Time.deltaTime;
+        movingImage.anchoredPosition += new Vector2(-moveAmount, 0);
     }
 }
