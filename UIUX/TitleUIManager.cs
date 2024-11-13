@@ -5,11 +5,11 @@ using UnityEngine.SceneManagement;
 public class TitleUIManager : MonoBehaviour
 {
     public GameObject gameManual;
-    public GameObject credit;
-    public Button Btn_play;
-    public Button Btn_manual;
-    public Button Btn_credit;
-    public Button Btn_back;
+    public GameObject credits;
+    public Button btnPlay;
+    public Button btnManual;
+    public Button btnCredit;
+    public Button btnBack;
     public string playScene;
 
     private void SetUIActive(GameObject uiElement, bool isActive)
@@ -20,25 +20,25 @@ public class TitleUIManager : MonoBehaviour
     public void Start()
     {
         SetUIActive(gameManual, false);
-        SetUIActive(credit, false);
-        SetUIActive(Btn_back.gameObject, false);
+        SetUIActive(credits, false);
+        SetUIActive(btnBack.gameObject, false);
 
-        Btn_play.onClick.AddListener(() => SceneManager.LoadScene(playScene));
-        Btn_manual.onClick.AddListener(() => {
+        btnPlay.onClick.AddListener(() => SceneManager.LoadScene(playScene));
+        btnManual.onClick.AddListener(() => {
             SetUIActive(gameManual, true);
-            SetUIActive(Btn_back.gameObject, true);
+            SetUIActive(btnBack.gameObject, true);
         });
-        Btn_credit.onClick.AddListener(() => {
-            SetUIActive(credit, true);
-            SetUIActive(Btn_back.gameObject, true);
+        btnCredit.onClick.AddListener(() => {
+            SetUIActive(credits, true);
+            SetUIActive(btnBack.gameObject, true);
         });
-        Btn_back.onClick.AddListener(() => HideAllPanels());
+        btnBack.onClick.AddListener(() => HideAllPanels());
     }
 
     public void HideAllPanels()
     {
         SetUIActive(gameManual, false);
-        SetUIActive(credit, false);
-        SetUIActive(Btn_back.gameObject, false);
+        SetUIActive(credits, false);
+        SetUIActive(btnBack.gameObject, false);
     }
 }

@@ -27,7 +27,7 @@ namespace UI
 
         // Image movement related variables
         public RectTransform movingImage;
-        public float speed = 100f;
+      //  public float ImageSlidingSpeed = 100f;
 
         void Start()
         {
