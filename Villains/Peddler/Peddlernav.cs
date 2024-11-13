@@ -15,11 +15,27 @@ public class Peddlernav : MonoBehaviour
     }
     void Update()
     { // 플레이어와의 거리 계산
-      float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         // 거리가 추적 범위 이내일 경우 플레이어를 따라감
-        if (distanceToPlayer <= followRange) {
-            nvAgent.SetDestination(player.position); 
+        if (distanceToPlayer <= followRange)
+        {
+            nvAgent.SetDestination(player.position);
         }
     }
-    
- }
+    private void OnCollisionEnter(Collision collision)
+    {
+
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            StartCoroutine(NavmeshStop());
+        }
+    }
+    private IEnumerator NavmeshStop()
+    {
+        Debug.Log("따라가기 멈춤");
+        nvAgent.enabled = false;
+        yield return new WaitForSeconds(2f);
+        nvAgent.enabled = true;
+    }
+
+}
