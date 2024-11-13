@@ -5,6 +5,7 @@ using UnityEngine;
 public class FireController : MonoBehaviour
 {
 
+    [SerializeField] private float exTime=3.0f;
     private void OnParticleCollision(GameObject other)
     {
         if (other.CompareTag("Fire"))
@@ -23,7 +24,7 @@ public class FireController : MonoBehaviour
             Color color = renderer.material.color;
 
          
-            for (float alpha = 3.5f; alpha > 0.0f; alpha -= 0.1f)
+            for (float alpha = exTime; alpha > 0.0f; alpha -= 0.1f)
             {
                
                 color.a = alpha;
