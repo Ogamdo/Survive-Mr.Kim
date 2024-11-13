@@ -11,10 +11,7 @@ public class CharMove : MonoBehaviour
     Animator anim;
     GameTimer gameTimer;
 
-    void Awake()
-    {
-        anim = GetComponent<Animator>();
-    }
+   
 
     void Start()
     {
@@ -31,7 +28,7 @@ public class CharMove : MonoBehaviour
         moveVec = new Vector3(hAxis, 0, vAxis).normalized;
 
         transform.position += moveVec * speed * Time.deltaTime;
-      //  anim.SetBool("Walk", moveVec != Vector3.zero);
+      
 
         if (moveVec != Vector3.zero)
         {

@@ -1,76 +1,71 @@
 using UnityEngine;
-using UnityEngine.UI;
+using System;
 
 public class GameTimer : MonoBehaviour
 {
-    public float playTimeLimit = 60.0f;  // ê²Œì„ ?‹œê°? (ì´? ?‹¨?œ„)
-    private bool isGameActive = false;  // ì´ˆê¸° ?ƒ?ƒœë¥? falseë¡? ë³?ê²?
-    private GameManager gameManager;
-    public Text timerText;  // UI Text ê°ì²´ë¥? ì°¸ì¡°
+    public float playTimeLimit = 60.0f;  // Game time limit in seconds
+    private bool isGameActive = false;   // Indicates if the game is active
+    private float currentTime;           // Holds the remaining time
+
+    // Events to notify external classes of time updates and expiration
+    public event Action<float> OnTimeUpdated;
+    public event Action OnTimeExpired;
 
     void Start()
     {
-        // GameManager ê°ì²´ë¥? ì°¾ìŠµ?‹ˆ?‹¤.
-        gameManager = FindObjectOfType<GameManager>();
-        UpdateTimerUI(); // ì´ˆê¸°?™” ?‹œ ?‹œê°„ì„ ?‘œ?‹œ?•©?‹ˆ?‹¤.
-    }
-
-    void UpdateTimerUI()
-    {
-        if (timerText != null)
-        {
-            timerText.text = Mathf.CeilToInt(playTimeLimit).ToString();
-        }
+        // Initialize the current time with the play time limit
+        currentTime = playTimeLimit;
     }
 
     void Update()
     {
+        // Check if the game is active
         if (isGameActive)
         {
-            if (playTimeLimit > 0)
+            // Decrease time if there's still time left
+            if (currentTime > 0)
             {
-                playTimeLimit -= Time.deltaTime;
-                UpdateTimerUI();
+                currentTime -= Time.deltaTime;  // Reduce time by deltaTime
+                OnTimeUpdated?.Invoke(currentTime); // Trigger time update event
             }
             else
             {
-                EndGame();
+                EndGame();  // End the game when time is up
             }
         }
     }
 
     void EndGame()
     {
-        isGameActive = false;
-        Debug.Log("ê²Œì„ ì¢…ë£Œ! ?‹œê°„ì´ ì´ˆê³¼?˜?—ˆ?Šµ?‹ˆ?‹¤.");
+        isGameActive = false;  // Set game active state to false
+        Debug.Log("Game over! Time has expired.");  // Log the game end message
 
-        // GameManager?˜ EndGame ë©”ì„œ?“œë¥? ?˜¸ì¶œí•˜?—¬ UIë¥? ë¹„í™œ?„±?™”?•©?‹ˆ?‹¤.
-        if (gameManager != null)
-        {
-            gameManager.EndGame();
-        }
+        OnTimeExpired?.Invoke();  // Trigger the time expired event
+
+        GameManager.Instance.EndGame();  // Call GameManager to handle game end
     }
 
     public void RestartGame()
     {
-        playTimeLimit = 60.0f; // ê²Œì„ ?‹œê°„ì„ ?‹¤?‹œ ì´ˆê¸°?™”
-        isGameActive = true;
-        UpdateTimerUI();  // UI ?—…?°?´?Š¸
+        currentTime = playTimeLimit;  // Reset current time to the play time limit
+        isGameActive = true;  // Set game active state to true
+        OnTimeUpdated?.Invoke(currentTime);  // Trigger initial time update event
     }
 
     public void SetPlayTimeLimit(float newLimit)
     {
-        playTimeLimit = newLimit;
-        UpdateTimerUI();  // ?ƒˆ ?‹œê°? ? œ?•œ?„ ?„¤? •?•˜ê³? UI ?—…?°?´?Š¸
+        playTimeLimit = newLimit;  // Set a new play time limit
+        currentTime = newLimit;  // Reset current time to the new limit
+        OnTimeUpdated?.Invoke(currentTime);  // Trigger event for new time limit
     }
 
     public bool IsGameActive()
     {
-        return isGameActive;
+        return isGameActive;  // Return the active state of the game
     }
 
     public void StartTimer()
     {
-        isGameActive = true;
+        isGameActive = true;  // Activate the game timer
     }
 }
