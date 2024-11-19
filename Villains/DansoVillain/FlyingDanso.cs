@@ -6,10 +6,14 @@ public class FlyingDanso : MonoBehaviour
 {
     [SerializeField] float time = 3.0f;
     [SerializeField] Vector3 force = Vector3.zero;
+  
     private Rigidbody rb;
     private Transform tr;
     public int speedRot = 100;
-    public float rotAng = 30f;
+    
+    public float rotX = 15f;
+    public float rotY = 15f;
+    public float rotZ = 30f;
     
     // Start is called before the first frame update
     void Start()
@@ -23,7 +27,7 @@ public class FlyingDanso : MonoBehaviour
         
     }
     void FixedUpdate(){
-        tr.Rotate(0, 0, rotAng*speedRot*Time.deltaTime);
+        tr.Rotate(rotX, rotY, rotZ*speedRot*Time.deltaTime);
     }
 
     // 충돌 발생 시 호출되는 메서드

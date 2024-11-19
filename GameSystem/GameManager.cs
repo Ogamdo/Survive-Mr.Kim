@@ -3,10 +3,11 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    public GameObject youSurvivedText;
     public GameObject youDiedText;
-    public GameObject retryButton;
-  public static GameManager Instance { get; private set; }
-   private void Awake()
+    public static GameManager Instance { get; private set; }
+    
+    private void Awake()
     {
         if (Instance == null)
         {
@@ -18,18 +19,19 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject); // 중복된 인스턴스 파괴
         }
     }
-   void Start()
+
+    void Start()
     {
         youDiedText.SetActive(false);
-        retryButton.SetActive(false);
+        youSurvivedText.SetActive(false);
     }
 
     public void EndGame()
     {
         youDiedText.SetActive(true);
-        retryButton.SetActive(true);
     }
-
- 
-
+    public void ClearGame()
+    {
+        youSurvivedText.SetActive(!false);
+    }
 }
