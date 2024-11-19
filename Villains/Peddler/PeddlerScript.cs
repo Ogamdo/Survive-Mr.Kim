@@ -19,7 +19,7 @@ public class PeddlerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        anim.SetBool("NPCM", true);
+       // anim.SetBool("NPCM", true);
     }
 
     private void OnCollisionEnter(Collision collision)

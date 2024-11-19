@@ -11,7 +11,7 @@ public class FireSpawn : MonoBehaviour
     public BoxCollider spawnRange; // FireSpawnRange BoxCollider
     public float delayBeforeSpawn = 13f; // 불이 생성되기 전 대기 시간
     public Transform parentObject; // 부모 오브젝트
-    public GameObject objectToDestroy; // 할당할 오브젝트
+    //public GameObject objectToDestroy; // 할당할 오브젝트
     public PeddlerFollow navMeshUpdater; // NavMeshUpdater 컴포넌트 참조
     private GameTimer gameTimer; // GameTimer 객체 참조
 
@@ -19,29 +19,16 @@ public class FireSpawn : MonoBehaviour
     {
         // GameTimer 객체를 찾습니다.
         gameTimer = FindObjectOfType<GameTimer>();
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        // Player 태그를 가진 게임오브젝트와 충돌한 경우
-        if (other.CompareTag("Player"))
+        // 타이머를 시작합니다.
+        if (gameTimer != null && !gameTimer.IsGameActive())
         {
-            // 타이머를 시작합니다.
-            if (gameTimer != null && !gameTimer.IsGameActive())
-            {
-                gameTimer.StartTimer();
+            gameTimer.StartTimer();
 
-                // 오브젝트를 파괴합니다.
-                if (objectToDestroy != null)
-                {
-                    Destroy(objectToDestroy);
-                }
-            }
-
-            // 13초 후에 불을 생성하는 코루틴 시작
-            StartCoroutine(SpawnFireAfterDelay(delayBeforeSpawn));
         }
+        // n초 후에 불을 생성하는 코루틴 시작
+        StartCoroutine(SpawnFireAfterDelay(delayBeforeSpawn));
     }
+
 
     IEnumerator SpawnFireAfterDelay(float delay)
     {

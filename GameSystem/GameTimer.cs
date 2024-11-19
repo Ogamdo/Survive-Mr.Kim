@@ -3,19 +3,19 @@ using UnityEngine.UI;
 
 public class GameTimer : MonoBehaviour
 {
-    public float playTimeLimit = 60.0f;  // ê²Œì„ ì‹œê°„ (ì´ˆ ë‹¨ìœ„)
-    private bool isGameActive = false;  // ì´ˆê¸° ìƒíƒœë¥¼ falseë¡œ ë³€ê²½
+    public float playTimeLimit = 120.0f;  // ê²Œì„ ?‹œê°? (ì´? ?‹¨?œ„)
+    private bool isGameActive = false;  // ì´ˆê¸° ?ƒ?ƒœë¥? falseë¡? ë³?ê²?
     private GameManager gameManager;
-    public Text timerText;  // UI Text ê°ì²´ë¥¼ ì°¸ì¡°
+    public Text timerText;  // UI Text ê°ì²´ë¥? ì°¸ì¡°
 
     void Start()
     {
-        // GameManager ê°ì²´ë¥¼ ì°¾ìŠµë‹ˆë‹¤.
-        gameManager = FindObjectOfType<GameManager>();
-        UpdateTimerUI(); // ì´ˆê¸°í™” ì‹œ ì‹œê°„ì„ í‘œì‹œí•©ë‹ˆë‹¤.
+        // GameManager ê°ì²´ë¥? ì°¾ìŠµ?‹ˆ?‹¤.
+        gameManager = GameManager.Instance;
+        UpdateTimerUI(); // ì´ˆê¸°?™” ?‹œ ?‹œê°„ì„ ?‘œ?‹œ?•©?‹ˆ?‹¤.
     }
 
-    void UpdateTimerUI()
+    public void UpdateTimerUI()
     {
         if (timerText != null)
         {
@@ -42,9 +42,9 @@ public class GameTimer : MonoBehaviour
     void EndGame()
     {
         isGameActive = false;
-        Debug.Log("ê²Œì„ ì¢…ë£Œ! ì‹œê°„ì´ ì´ˆê³¼ë˜ì—ˆìŠµë‹ˆë‹¤.");
+        Debug.Log("ê²Œì„ ì¢…ë£Œ! ?‹œê°„ì´ ì´ˆê³¼?˜?—ˆ?Šµ?‹ˆ?‹¤.");
 
-        // GameManagerì˜ EndGame ë©”ì„œë“œë¥¼ í˜¸ì¶œí•˜ì—¬ UIë¥¼ ë¹„í™œì„±í™”í•©ë‹ˆë‹¤.
+        // GameManager?˜ EndGame ë©”ì„œ?“œë¥? ?˜¸ì¶œí•˜?—¬ UIë¥? ë¹„í™œ?„±?™”?•©?‹ˆ?‹¤.
         if (gameManager != null)
         {
             gameManager.EndGame();
@@ -53,15 +53,15 @@ public class GameTimer : MonoBehaviour
 
     public void RestartGame()
     {
-        playTimeLimit = 60.0f; // ê²Œì„ ì‹œê°„ì„ ë‹¤ì‹œ ì´ˆê¸°í™”
+        playTimeLimit = 60.0f; // ê²Œì„ ?‹œê°„ì„ ?‹¤?‹œ ì´ˆê¸°?™”
         isGameActive = true;
-        UpdateTimerUI();  // UI ì—…ë°ì´íŠ¸
+        UpdateTimerUI();  // UI ?—…?°?´?Š¸
     }
 
     public void SetPlayTimeLimit(float newLimit)
     {
         playTimeLimit = newLimit;
-        UpdateTimerUI();  // ìƒˆ ì‹œê°„ ì œí•œì„ ì„¤ì •í•˜ê³  UI ì—…ë°ì´íŠ¸
+        UpdateTimerUI();  // ?ƒˆ ?‹œê°? ? œ?•œ?„ ?„¤? •?•˜ê³? UI ?—…?°?´?Š¸
     }
 
     public bool IsGameActive()
