@@ -11,7 +11,7 @@ namespace UI
         // Required buttons: Menu, Resume, Restart, Exit, Sound
         public Button Btn_menu;
         public Button Btn_resume;
-        public Button Btn_restart;
+       // public Button Btn_restart;
         public Button Btn_exit;
         public Button Btn_sound;
 
@@ -23,7 +23,7 @@ namespace UI
         // Timer related variables
         [HideInInspector]
         public GameTimer gameTimer;
-        private bool timeFlow = true;
+       // private bool timeFlow = true;
 
         // Image movement related variables
         public RectTransform movingImage;
@@ -58,10 +58,10 @@ namespace UI
             });
 
             // Restart button to reload the current scene
-            Btn_restart.onClick.AddListener(() => {
+          /*  Btn_restart.onClick.AddListener(() => {
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name);
                 Debug.Log("게임 재시작");
-            });
+            }); */
 
             // Exit button to quit the application
             Btn_exit.onClick.AddListener(() => {
