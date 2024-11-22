@@ -8,111 +8,113 @@ namespace UI
 {
     public class PlayUIManager : TitleUIManager
     {
-        // Required buttons: Menu, Resume, Restart, Exit, Sound
+        // 필요한 버튼: 메뉴, 재개, 재시작, 종료, 사운드
         public Button Btn_menu;
         public Button Btn_resume;
-       // public Button Btn_restart;
+        public Button Btn_restart;
         public Button Btn_exit;
         public Button Btn_sound;
 
-        // New UI elements for the pause panel
-        public GameObject pausePanel; // Pause panel
-        public GameObject playPanel; // Display clear condition checklist on the panel.
-        public Slider soundSlider; // Sound adjustment slider
+        // 일시정지 패널 UI 요소들
+        public GameObject pausePanel; // 일시정지 패널
+        public GameObject playPanel; // 클리어 조건 체크리스트 패널
+        public Slider soundSlider; // 사운드 조절 슬라이더
 
-        // Timer related variables
+        // 타이머 관련 변수
         [HideInInspector]
         public GameTimer gameTimer;
-       // private bool timeFlow = true;
+        private bool timeFlow = true;
 
-        // Image movement related variables
+        // 이미지 이동 관련 변수
         public RectTransform movingImage;
-      //  public float ImageSlidingSpeed = 100f;
+        // public float ImageSlidingSpeed = 100f;
 
         void Start()
         {
-            // Call Start from the parent class
+            // 부모 클래스의 Start 호출
             base.Start();
 
-            // Initial state setup
-            playPanel.SetActive(false); // Deactivate the play panel initially
-            pausePanel.SetActive(false); // Deactivate the pause panel initially
+            // 초기 상태 설정
+            playPanel.SetActive(false); // 플레이 패널 비활성화
+            pausePanel.SetActive(false); // 일시정지 패널 비활성화
 
-            // Menu button to open the pause panel
+            // 메뉴 버튼: 일시정지 패널 표시/숨김
             Btn_menu.onClick.AddListener(() => {
-                pausePanel.SetActive(!pausePanel.activeSelf); // Toggle the visibility of the pause panel
+                pausePanel.SetActive(!pausePanel.activeSelf);
                 if (pausePanel.activeSelf)
                 {
-                    gameTimer.StartTimer(); // Pause the game timer operation
+                    gameTimer.StartTimer(); // 타이머 일시정지
                 }
                 else
                 {
-                    gameTimer.StartTimer(); // Resume the game timer operation
+                    gameTimer.StartTimer(); // 타이머 재개
                 }
             });
 
-            // Resume button to close the pause panel
+            // 재개 버튼: 일시정지 패널 닫고 게임 재개
             Btn_resume.onClick.AddListener(() => {
                 pausePanel.SetActive(false);
-                gameTimer.StartTimer(); // Resume the game timer
+                gameTimer.StartTimer(); // 타이머 재개
             });
 
-            // Restart button to reload the current scene
-          /*  Btn_restart.onClick.AddListener(() => {
+            // 재시작 버튼: 현재 씬 재시작
+            Btn_restart.onClick.AddListener(() => {
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name);
                 Debug.Log("게임 재시작");
-            }); */
+            });
 
-            // Exit button to quit the application
+            // 종료 버튼: 게임 종료
             Btn_exit.onClick.AddListener(() => {
                 Application.Quit();
                 Debug.Log("게임 종료");
             });
 
-            // Sound button to toggle sound on and off
+            // 사운드 버튼: 사운드 켜고 끄기
             Btn_sound.onClick.AddListener(() => {
                 AudioListener.volume = AudioListener.volume > 0 ? 0 : 1;
-                soundSlider.value = AudioListener.volume; // Update the volume slider based on current volume
+                soundSlider.value = AudioListener.volume; // 현재 볼륨에 맞춰 슬라이더 업데이트
             });
 
-            // Sound slider to adjust volume
+            // 사운드 슬라이더: 볼륨 조절
             soundSlider.onValueChanged.AddListener(value => {
                 AudioListener.volume = value;
                 Debug.Log("사운드 볼륨 조절됨: " + value);
             });
 
-            // Set initial timer text
+            // 초기 타이머 텍스트 설정
             UpdateTimerText();
         }
 
         void Update()
         {
-            // Update the timer text display
+            // 타이머가 활성 상태일 경우 타이머 UI 업데이트
             if (gameTimer != null && gameTimer.IsGameActive())
             {
                 UpdateTimerText();
             }
 
-            // Handle the movement of the image
+            // 이미지 이동 처리 (주석 처리된 원본 메서드)
             // MoveImage();
         }
 
-        // Update the timer display text
+        // 타이머 UI 텍스트를 120초 기준으로 업데이트
         void UpdateTimerText()
         {
             if (gameTimer != null)
             {
-                int minutes = Mathf.FloorToInt(gameTimer.playTimeLimit / 60);
-                int seconds = Mathf.FloorToInt(gameTimer.playTimeLimit % 60);
+                // 남은 시간을 120초 기준으로 계산
+                float remainingTime = Mathf.Clamp(120 - gameTimer.playTimeLimit, 0, 120);
+                int minutes = Mathf.FloorToInt(remainingTime / 60);
+                int seconds = Mathf.FloorToInt(remainingTime % 60);
+
                 gameTimer.timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
             }
         }
 
-        // Handle image movement
+        // 이미지 이동 처리 (주석 처리된 원본 메서드)
         // void MoveImage()
         // {
-        //     // Move the image from right to left side
-        //     float moveAmount = speed * Time.deltaTime;
+        //     float moveAmount = ImageSlidingSpeed * Time.deltaTime;
         //     movingImage.anchoredPosition += new Vector2(-moveAmount, 0);
         // }
     }
