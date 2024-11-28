@@ -5,23 +5,21 @@ using UnityEngine;
 public class PeddlerScript : MonoBehaviour
 {
     Animator anim;
+    public float pushForce = 45f; // 밀어낼 힘의 크기 조정
     void Awake()
     {
         anim = GetComponent<Animator>();
     }
-
     // Start is called before the first frame update
     void Start()
     {
 
     }
-
     // Update is called once per frame
     void Update()
     {
-        anim.SetBool("NPCM", true);
+        anim.SetBool("Kim", true);
     }
-
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player"))
@@ -38,5 +36,4 @@ public class PeddlerScript : MonoBehaviour
             }
         }
     }
-
 }
