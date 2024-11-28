@@ -77,3 +77,4 @@ Assets/AssetBundles/**
 
 # Avoid ignoring the empty folders
 !**/.gitkeep
+/.vs
