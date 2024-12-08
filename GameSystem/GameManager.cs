@@ -3,6 +3,7 @@ using Microsoft.Unity.VisualStudio.Editor;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class GameManager : MonoBehaviour
     private GameTimer gameTimer;
     [SerializeField]public float startT=15;
     [SerializeField]public float repeatT=15;
-    [SerializeField]private List<Image> images= new List<Image>();
+    [SerializeField]private List<Image> cuts= new List<Image>();
 
     public List<GameObject> villains = new List<GameObject>();
     
@@ -40,12 +41,13 @@ public class GameManager : MonoBehaviour
     {
         youDiedText.SetActive(false); // "You Died" 텍스트 비활성화
         youSurvivedText.SetActive(false); // "You Survived" 텍스트 비활성화
+        ClearImage.SetActive(false); //Clear 이미지 비활성화
 
         villains[0].SetActive(false);
         villains[1].SetActive(false);
         villains[2].SetActive(false);
         villains[3].SetActive(false);
-
+        for (int i = 0;i<`)
 
 
         InvokeRepeating(nameof(VillainsSpwan),startT,repeatT);
@@ -56,6 +58,7 @@ public class GameManager : MonoBehaviour
        if(clear) 
        {
             youSurvivedText.SetActive(true);
+            ClearImage.SetActive(true);
        }
        else
        {
@@ -75,6 +78,7 @@ public class GameManager : MonoBehaviour
         if(villains[count] !=null)
         {
          villains[count].SetActive(true);   
+
          Debug.Log(count+"번 빌런 등장!");
         }
           count++;
