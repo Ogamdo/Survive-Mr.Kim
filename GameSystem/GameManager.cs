@@ -1,87 +1,80 @@
 using System.Collections.Generic;
-using Microsoft.Unity.VisualStudio.Editor;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour
 {
-    [Header("빌런세팅")]
-    private GameTimer gameTimer;
-    [SerializeField]public float startT=15;
-    [SerializeField]public float repeatT=15;
-    [SerializeField]private List<GameObject> villains= new List<GameObject>();
+    [Header("빌런 설정")]
+    [SerializeField] private float startT = 15f; // 빌런 스폰 시작 시간
+    [SerializeField] private float repeatT = 15f; // 빌런 스폰 간격
+    [SerializeField] private List<GameObject> villains = new List<GameObject>(); // 빌런 오브젝트 리스트
 
-    public List<GameObject> villains = new List<GameObject>();
-    
-    [Header("클리어 문구와 사망 문구 세팅")]
-    public GameObject youSurvivedText; // "You Survived" 텍스트 오브젝트
-    public GameObject youDiedText; // "You Died" 텍스트 오브젝트
-    public GameObject ClearImage;
-    
-        
+    [Header("클리어 및 사망 UI")]
+    [SerializeField] private GameObject youSurvivedText; // "You Survived" 텍스트 오브젝트
+    [SerializeField] private GameObject youDiedText; // "You Died" 텍스트 오브젝트
+    [SerializeField] private GameObject clearImage; // 클리어 이미지
 
     public static GameManager Instance { get; private set; } // GameManager의 싱글톤 인스턴스
-    
+
+    private int currentVillainIndex = 0; // 현재 스폰될 빌런의 인덱스
+
     private void Awake()
     {
+        // 싱글톤 설정
         if (Instance == null)
         {
-            Instance = this; // 싱글톤 인스턴스 설정
-            DontDestroyOnLoad(gameObject); // 씬 전환 시에도 파괴되지 않도록 설정
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
-            Destroy(gameObject); // 중복된 인스턴스 파괴
+            Destroy(gameObject);
         }
     }
 
-    void Start()
+    private void Start()
     {
-        youDiedText.SetActive(false); // "You Died" 텍스트 비활성화
-        youSurvivedText.SetActive(false); // "You Survived" 텍스트 비활성화
-        ClearImage.SetActive(false); //Clear 이미지 비활성화
+        // 초기 UI 상태 설정
+        youDiedText?.SetActive(false);
+        youSurvivedText?.SetActive(false);
+        clearImage?.SetActive(false);
 
-        villains[0].SetActive(false);
-        villains[1].SetActive(false);
-        villains[2].SetActive(false);
-        villains[3].SetActive(false);
-        for (int i = 0;i<`)
+        // 빌런 비활성화
+        foreach (var villain in villains)
+        {
+            if (villain != null)
+                villain.SetActive(false);
+        }
 
-
-        InvokeRepeating(nameof(VillainsSpwan),startT,repeatT);
+        // 일정 시간 간격으로 빌런 스폰 시작
+        InvokeRepeating(nameof(VillainsSpawn), startT, repeatT);
     }
 
     public void EndGame(bool clear)
-    {  
-       if(clear) 
-       {
-            youSurvivedText.SetActive(true);
-            ClearImage.SetActive(true);
-       }
-       else
-       {
-            youDiedText.SetActive(true) ;
-       }
-      ; // "You Died" 텍스트 활성화
-    }
-
-    public void ClearGame()
     {
-        youSurvivedText.SetActive(true); // "You Survived" 텍스트 활성화
-    }
-
-    public void VillainsSpwan()
-    {
-          int count =0;
-        if(villains[count] !=null)
+        if (clear)
         {
-         villains[count].SetActive(true);   
-
-         Debug.Log(count+"번 빌런 등장!");
+            youSurvivedText?.SetActive(true);
+            clearImage?.SetActive(true);
         }
-          count++;
-           
+        else
+        {
+            youDiedText?.SetActive(true);
+        }
+    }
+
+    public void VillainsSpawn()
+    {
+        // 현재 인덱스의 빌런 활성화
+        if (currentVillainIndex < villains.Count && villains[currentVillainIndex] != null)
+        {
+            villains[currentVillainIndex].SetActive(true);
+            Debug.Log($"{currentVillainIndex}번 빌런 등장!");
+            currentVillainIndex++;
+        }
+        else
+        {
+            Debug.LogWarning("더 이상 스폰할 빌런이 없습니다.");
+        }
     }
 }
