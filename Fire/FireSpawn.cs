@@ -10,11 +10,11 @@ public class FireSpawn : MonoBehaviour
     [Header("불꽃의 개수")]
     public int minFireCount = 6; // 최소 생성 개수
     public int maxFireCount = 10; // 최대 생성 개수
-    private int fireCount; // 생성할 불꽃의 개수
+    private int fireCount=6; // 생성할 불꽃의 개수
 
     [Header("불꽃의 생성 범위와 대기 시간.")]
     public BoxCollider spawnRange; // 불꽃 생성 범위
-    public float delayBeforeSpawn = 13f; // 생성 전 대기 시간
+    public float delayBeforeSpawn = 5f; // 생성 전 대기 시간
     public Transform fireSpwanObject; // 부모 오브젝트 참조
 
     void Start()

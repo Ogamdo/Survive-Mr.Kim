@@ -31,7 +31,7 @@ public class GameTimer : MonoBehaviour
             }
             else
             {
-                EndGame();
+                EndGame(false);
             }
         }
     }
