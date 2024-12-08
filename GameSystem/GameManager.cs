@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     private GameTimer gameTimer;
     [SerializeField]public float startT=15;
     [SerializeField]public float repeatT=15;
-    [SerializeField]private List<Image> cuts= new List<Image>();
+    [SerializeField]private List<GameObject> villains= new List<GameObject>();
 
     public List<GameObject> villains = new List<GameObject>();
     
