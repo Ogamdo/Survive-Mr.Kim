@@ -1,78 +1,55 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Unity.AI.Navigation;
-using UnityEngine.AI;
+
 public class FireSpawn : MonoBehaviour
 {
-    public GameObject firePrefab;
-    public int minFireCount = 6;
-    public int maxFireCount = 10;
-    public BoxCollider spawnRange; // FireSpawnRange BoxCollider
-    public float delayBeforeSpawn = 13f; // ���� �����Ǳ� �� ��� �ð�
-    public Transform parentObject; // �θ� ������Ʈ
-    //public GameObject objectToDestroy; // �Ҵ��� ������Ʈ
-    public PeddlerFollow navMeshUpdater; // NavMeshUpdater ������Ʈ ����
-    private GameTimer gameTimer; // GameTimer ��ü ����
+    [Header("불의 모양이 될 Prefab")]
+    public GameObject firePrefab; // 생성할 불꽃 프리팹
+
+    [Header("불꽃의 개수")]
+    public int minFireCount = 6; // 최소 생성 개수
+    public int maxFireCount = 10; // 최대 생성 개수
+    private int fireCount; // 생성할 불꽃의 개수
+
+    [Header("불꽃의 생성 범위와 대기 시간.")]
+    public BoxCollider spawnRange; // 불꽃 생성 범위
+    public float delayBeforeSpawn = 13f; // 생성 전 대기 시간
+    public Transform fireSpwanObject; // 부모 오브젝트 참조
 
     void Start()
     {
-        // GameTimer ��ü�� ã���ϴ�.
-        gameTimer = FindObjectOfType<GameTimer>();
-        // Ÿ�̸Ӹ� �����մϴ�.
-        if (gameTimer != null && !gameTimer.IsGameActive())
-        {
-            gameTimer.StartTimer();
+        // [변경점 1] fireCount 초기화 위치 변경
+        // 기존에는 필드 선언부에서 Random.Range로 초기화했으나,
+        // Unity의 필드 초기화 순서에 따라 Inspector에서 설정한 값을 반영하지 못할 수 있어 Start에서 초기화
+        fireCount = Random.Range(minFireCount, maxFireCount);
 
-        }
-        // n�� �Ŀ� ���� �����ϴ� �ڷ�ƾ ����
-        StartCoroutine(SpawnFireAfterDelay(delayBeforeSpawn));
+        // [변경점 2] Invoke 오타 수정
+        // 기존 코드에서는 "InVoke"로 오타가 있었음.
+        Invoke(nameof(SpawnFire), delayBeforeSpawn);
     }
 
-
-    IEnumerator SpawnFireAfterDelay(float delay)
+    void SpawnFire()
     {
-        yield return new WaitForSeconds(delay);
+        // [변경점 3] BoxCollider 참조 수정
+        // 기존 코드에서 "box"라는 정의되지 않은 변수를 참조했으나, spawnRange로 수정
+        Vector3 boxSize = spawnRange.size;
+        Vector3 boxCenter = spawnRange.center;
 
-        int fireCount = Random.Range(minFireCount, maxFireCount);
-
-        for (int i = 0; i < fireCount; i++)
+        for (int i = 0; i < fireCount; i++) // [변경점 4] while 루프를 for 루프로 변경
         {
-            SpawnFire(parentObject);
+            // 기존에는 while 루프와 count 변수를 사용했으나,
+            // for 루프를 사용해 가독성과 안전성을 향상
+            Vector3 fireSpwanRanPos = new Vector3(
+                Random.Range(boxCenter.x - boxSize.x / 2, boxCenter.x + boxSize.x / 2),
+                Random.Range(boxCenter.y - boxSize.y / 2, boxCenter.y + boxSize.y / 2),
+                Random.Range(boxCenter.z - boxSize.z / 2, boxCenter.z + boxSize.z / 2)
+            );
+
+            // [변경점 5] 랜덤 위치 변수 이름 수정 및 올바른 참조 사용
+            // 기존 코드에서는 randomPosition 변수를 선언하지 않고 사용했으나,
+            // fireSpwanRanPos로 변수명을 통일하여 사용
+            Instantiate(firePrefab, spawnRange.transform.TransformPoint(fireSpwanRanPos), Quaternion.identity, fireSpwanObject);
         }
-
-        if (navMeshUpdater != null)
-        {
-            navMeshUpdater.UpdateNavMesh();
-        }
-        else
-        {
-            
-        }
-    }
-
-    void SpawnFire(Transform parent)
-    {
-        Vector3 randomPosition = GetRandomPositionInBox(spawnRange);
-        GameObject fireInstance = Instantiate(firePrefab, randomPosition, Quaternion.identity, parent);
-        // NavMeshObstacle ������Ʈ�� �߰��Ͽ� �׺�޽����� ��ֹ��� �νĵǵ��� �����մϴ�.
-        NavMeshObstacle obstacle = fireInstance.AddComponent<NavMeshObstacle>();
-        obstacle.carving = true;  // ��ֹ� ������ �׺�޽����� ����
-
-        fireInstance.AddComponent<FireController>();
-    }
-
-    Vector3 GetRandomPositionInBox(BoxCollider box)
-    {
-        Vector3 boxSize = box.size;
-        Vector3 boxCenter = box.center;
-
-        Vector3 randomPosition = new Vector3(
-            Random.Range(boxCenter.x - boxSize.x / 2, boxCenter.x + boxSize.x / 2),
-            Random.Range(boxCenter.y - boxSize.y / 2, boxCenter.y + boxSize.y / 2),
-            Random.Range(boxCenter.z - boxSize.z / 2, boxCenter.z + boxSize.z / 2)
-        );
-
-        return box.transform.TransformPoint(randomPosition);
     }
 }

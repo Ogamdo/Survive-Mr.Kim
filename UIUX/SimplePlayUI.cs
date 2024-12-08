@@ -4,6 +4,7 @@ using UnityEngine.UI;
 public class SimplePlayUI : MonoBehaviour
 {
     // UI 요소: 일시정지, 재개, 볼륨 슬라이더, 체크박스
+    [Header("UI 버튼 설정")]
     public Button btnPause; // 일시정지 버튼
     public Button btnResume; // 재개 버튼
     public Slider volumeSlider; // 볼륨 설정 슬라이더
@@ -11,7 +12,9 @@ public class SimplePlayUI : MonoBehaviour
 
     public Toggle checkbox1; // 체크박스 1
     public Toggle checkbox2; // 체크박스 2
+    private bool clear=false;
     public GameObject panel; // 체크박스를 포함할 패널
+    
 
     private bool isPaused = false; // 일시정지 상태 확인용
 
@@ -33,14 +36,14 @@ public class SimplePlayUI : MonoBehaviour
             // 체크박스 1 설정
             checkbox1 = new GameObject("Checkbox1").AddComponent<Toggle>();
             checkbox1.transform.SetParent(panel.transform); // Panel의 자식으로 설정
-            checkbox1.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -30); // 위치 설정
-            checkbox1.GetComponentInChildren<Text>().text = "옵션 1"; // 텍스트 설정
+            //checkbox1.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -30); // 위치 설정
+            checkbox1.GetComponentInChildren<Text>().text = "불을 모두 꺼주세요"; // 텍스트 설정
 
             // 체크박스 2 설정
             checkbox2 = new GameObject("Checkbox2").AddComponent<Toggle>();
             checkbox2.transform.SetParent(panel.transform); // Panel의 자식으로 설정
-            checkbox2.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -60); // 위치 설정
-            checkbox2.GetComponentInChildren<Text>().text = "옵션 2"; // 텍스트 설정
+            //checkbox2.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -60); // 위치 설정
+            checkbox2.GetComponentInChildren<Text>().text = "비상버튼을 눌러 탈출해주세요"; // 텍스트 설정
         }
 
         // 타이머 UI가 1초마다 갱신되도록 설정
