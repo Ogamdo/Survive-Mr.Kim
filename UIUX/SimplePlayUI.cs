@@ -3,30 +3,50 @@ using UnityEngine.UI;
 
 public class SimplePlayUI : MonoBehaviour
 {
-    // UI ¿ä¼Ò: ÀÏ½ÃÁ¤Áö, Àç°³, »ç¿îµå ½½¶óÀÌ´õ
-    public Button btnPause; // ÀÏ½ÃÁ¤Áö ¹öÆ°
-    public Button btnResume; // Àç°³ ¹öÆ°
-    public Slider volumeSlider; // »ç¿îµå Á¶Àı ½½¶óÀÌ´õ
- public GameTimer gameTimer; // GameTimer °´Ã¼¸¦ ¿¡µğÅÍ¿¡¼­ ÇÒ´ç
+    // UI ìš”ì†Œ: ì¼ì‹œì •ì§€, ì¬ê°œ, ë³¼ë¥¨ ìŠ¬ë¼ì´ë”, ì²´í¬ë°•ìŠ¤
+    public Button btnPause; // ì¼ì‹œì •ì§€ ë²„íŠ¼
+    public Button btnResume; // ì¬ê°œ ë²„íŠ¼
+    public Slider volumeSlider; // ë³¼ë¥¨ ì„¤ì • ìŠ¬ë¼ì´ë”
+    public GameTimer gameTimer; // GameTimer ê°ì²´ì˜ ì°¸ì¡°
 
-    private bool isPaused = false; // ÀÏ½ÃÁ¤Áö »óÅÂ È®ÀÎ¿ë
+    public Toggle checkbox1; // ì²´í¬ë°•ìŠ¤ 1
+    public Toggle checkbox2; // ì²´í¬ë°•ìŠ¤ 2
+    public GameObject panel; // ì²´í¬ë°•ìŠ¤ë¥¼ í¬í•¨í•  íŒ¨ë„
+
+    private bool isPaused = false; // ì¼ì‹œì •ì§€ ìƒíƒœ í™•ì¸ìš©
 
     void Start()
-    {   
-        // UI ÃÊ±â ¼³Á¤
-        btnResume.gameObject.SetActive(false); // Ã³À½¿¡´Â Àç°³ ¹öÆ° ºñÈ°¼ºÈ­
-        volumeSlider.gameObject.SetActive(false); // Ã³À½¿¡´Â º¼·ı ½½¶óÀÌ´õ ºñÈ°¼ºÈ­
-        volumeSlider.value = AudioListener.volume; // ÇöÀç º¼·ı¿¡ ¸ÂÃç ½½¶óÀÌ´õ ¼³Á¤
+    {
+        // UI ì´ˆê¸°í™”
+        btnResume.gameObject.SetActive(false); // ì´ˆê¸°ì—ëŠ” ì¬ê°œ ë²„íŠ¼ ë¹„í™œì„±í™”
+        volumeSlider.gameObject.SetActive(false); // ì´ˆê¸°ì—ëŠ” ë³¼ë¥¨ ìŠ¬ë¼ì´ë” ë¹„í™œì„±í™”
+        volumeSlider.value = AudioListener.volume; // í˜„ì¬ ë³¼ë¥¨ì„ ìŠ¬ë¼ì´ë”ì— ë™ê¸°í™”
 
-        // ¹öÆ° ¹× ½½¶óÀÌ´õ¿¡ ÀÌº¥Æ® ¸®½º³Ê Ãß°¡
+        // ë²„íŠ¼ê³¼ ìŠ¬ë¼ì´ë” ì´ë²¤íŠ¸ ì¶”ê°€
         btnPause.onClick.AddListener(PauseGame);
         btnResume.onClick.AddListener(ResumeGame);
         volumeSlider.onValueChanged.AddListener(SetVolume);
 
-        // Å¸ÀÌ¸Ó UI¸¦ 1ÃÊ¸¶´Ù ¾÷µ¥ÀÌÆ®ÇÏµµ·Ï ¼³Á¤
+        // ì²´í¬ë°•ìŠ¤ ì´ˆê¸°í™” ë° ë¶€ëª¨ íŒ¨ë„ì— ì¶”ê°€
+        if (panel != null)
+        {
+            // ì²´í¬ë°•ìŠ¤ 1 ì„¤ì •
+            checkbox1 = new GameObject("Checkbox1").AddComponent<Toggle>();
+            checkbox1.transform.SetParent(panel.transform); // Panelì˜ ìì‹ìœ¼ë¡œ ì„¤ì •
+            checkbox1.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -30); // ìœ„ì¹˜ ì„¤ì •
+            checkbox1.GetComponentInChildren<Text>().text = "ì˜µì…˜ 1"; // í…ìŠ¤íŠ¸ ì„¤ì •
+
+            // ì²´í¬ë°•ìŠ¤ 2 ì„¤ì •
+            checkbox2 = new GameObject("Checkbox2").AddComponent<Toggle>();
+            checkbox2.transform.SetParent(panel.transform); // Panelì˜ ìì‹ìœ¼ë¡œ ì„¤ì •
+            checkbox2.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -60); // ìœ„ì¹˜ ì„¤ì •
+            checkbox2.GetComponentInChildren<Text>().text = "ì˜µì…˜ 2"; // í…ìŠ¤íŠ¸ ì„¤ì •
+        }
+
+        // íƒ€ì´ë¨¸ UIê°€ 1ì´ˆë§ˆë‹¤ ê°±ì‹ ë˜ë„ë¡ ì„¤ì •
         if (gameTimer != null)
         {
-            InvokeRepeating("UpdateTimerUI", 0f, 1f); // 1ÃÊ °£°İÀ¸·Î UI ¾÷µ¥ÀÌÆ®
+            InvokeRepeating("UpdateTimerUI", 0f, 1f); // 1ì´ˆ ê°„ê²©ìœ¼ë¡œ UI ê°±ì‹ 
         }
     }
 
@@ -34,44 +54,44 @@ public class SimplePlayUI : MonoBehaviour
     {
         if (!isPaused && gameTimer != null && gameTimer.IsGameActive())
         {
-            gameTimer.UpdateTimerUI(); // Å¸ÀÌ¸Ó UI¸¦ 1ÃÊ¸¶´Ù ¾÷µ¥ÀÌÆ®
+            gameTimer.UpdateTimerUI(); // íƒ€ì´ë¨¸ UIë¥¼ 1ì´ˆë§ˆë‹¤ ê°±ì‹ 
         }
     }
 
-    // °ÔÀÓ ÀÏ½ÃÁ¤Áö
+    // ê²Œì„ ì¼ì‹œì •ì§€
     void PauseGame()
     {
         isPaused = true;
-        Time.timeScale = 0; // °ÔÀÓ ½Ã°£À» ¸ØÃã
-        gameTimer.PauseTimer(); // Å¸ÀÌ¸Ó ¸ØÃã
-        btnPause.gameObject.SetActive(false); // ÀÏ½ÃÁ¤Áö ¹öÆ° ¼û±è
-        btnResume.gameObject.SetActive(true); // Àç°³ ¹öÆ° Ç¥½Ã
-        volumeSlider.gameObject.SetActive(true); // º¼·ı ½½¶óÀÌ´õ Ç¥½Ã
-        Debug.Log("°ÔÀÓ ÀÏ½ÃÁ¤Áö");
+        Time.timeScale = 0; // ê²Œì„ ì‹œê°„ì„ ë©ˆì¶¤
+        gameTimer.PauseTimer(); // íƒ€ì´ë¨¸ ì •ì§€
+        btnPause.gameObject.SetActive(false); // ì¼ì‹œì •ì§€ ë²„íŠ¼ ìˆ¨ê¹€
+        btnResume.gameObject.SetActive(true); // ì¬ê°œ ë²„íŠ¼ í‘œì‹œ
+        volumeSlider.gameObject.SetActive(true); // ë³¼ë¥¨ ìŠ¬ë¼ì´ë” í‘œì‹œ
+        Debug.Log("ê²Œì„ ì¼ì‹œì •ì§€");
     }
 
-    // °ÔÀÓ Àç°³
+    // ê²Œì„ ì¬ê°œ
     void ResumeGame()
     {
         isPaused = false;
-        Time.timeScale = 1; // °ÔÀÓ ½Ã°£À» Á¤»ó ¼Óµµ·Î Àç°³
-        gameTimer.StartTimer(); // Å¸ÀÌ¸Ó Àç°³
-        btnPause.gameObject.SetActive(true); // ÀÏ½ÃÁ¤Áö ¹öÆ° Ç¥½Ã
-        btnResume.gameObject.SetActive(false); // Àç°³ ¹öÆ° ¼û±è
-        volumeSlider.gameObject.SetActive(false); // º¼·ı ½½¶óÀÌ´õ ¼û±è
-        Debug.Log("°ÔÀÓ Àç°³");
+        Time.timeScale = 1; // ê²Œì„ ì‹œê°„ì„ ì •ìƒ ì†ë„ë¡œ ì„¤ì •
+        gameTimer.StartTimer(); // íƒ€ì´ë¨¸ ì‹œì‘
+        btnPause.gameObject.SetActive(true); // ì¼ì‹œì •ì§€ ë²„íŠ¼ í‘œì‹œ
+        btnResume.gameObject.SetActive(false); // ì¬ê°œ ë²„íŠ¼ ìˆ¨ê¹€
+        volumeSlider.gameObject.SetActive(false); // ë³¼ë¥¨ ìŠ¬ë¼ì´ë” ìˆ¨ê¹€
+        Debug.Log("ê²Œì„ ì¬ê°œ");
     }
 
-    // »ç¿îµå º¼·ı Á¶Àı
+    // ë³¼ë¥¨ ì„¤ì • ë³€ê²½
     void SetVolume(float volume)
     {
         AudioListener.volume = volume;
-        Debug.Log("»ç¿îµå º¼·ı ¼³Á¤µÊ: " + volume);
+        Debug.Log("ë³¼ë¥¨ ì„¤ì • ë³€ê²½ë¨: " + volume);
     }
 
     void OnDestroy()
     {
-        // ÀÌ ½ºÅ©¸³Æ®°¡ ÆÄ±«µÉ ¶§ InvokeRepeating ÁßÁö
+        // ì´ ìŠ¤í¬ë¦½íŠ¸ê°€ íŒŒê´´ë  ë•Œ InvokeRepeating ì¤‘ì§€
         CancelInvoke("UpdateTimerUI");
     }
 }
