@@ -5,30 +5,30 @@ using UnityEngine;
 public class PlayerFireEx : MonoBehaviour
 {
     public GameObject objectToPlace;
-    public GameObject targetObject; // ³»·Á³õÀ» À§Ä¡·Î »ç¿ëÇÒ ¿ÀºêÁ§Æ®
+    public GameObject targetObject; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
     private bool shouldFollowGun = false;
     private bool isInTrigger = false;
     public FireEx fireExScript;
-    public GameObject Deleteobj; // Ã¶ÀÚ ¿À·ù ¼öÁ¤
+    public GameObject Deleteobj; // Ã¶ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     void Update()
     {
-        // Æ®¸®°Å ¹üÀ§ ³»¿¡¼­ F Å°¸¦ ´©¸£¸é µû¶ó°¡±â/³»·Á³õ±â ÀüÈ¯
+        // Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ F Å°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ó°¡±ï¿½/ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
         if (isInTrigger && Input.GetKeyDown(KeyCode.F))
         {
-            shouldFollowGun = !shouldFollowGun; // »óÅÂ ÀüÈ¯
+            shouldFollowGun = !shouldFollowGun; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
 
             if (shouldFollowGun)
             {
-                PlaceObjectAtGunPosition(); // ¿ÀºêÁ§Æ®¸¦ ÃÑ À§Ä¡¿¡ ¹èÄ¡
+                PlaceObjectAtGunPosition(); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½Ä¡
 
-                // Deleteobj°¡ Á¸ÀçÇÒ °æ¿ì »èÁ¦
+                // Deleteobjï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 if (Deleteobj != null)
                 {
-                    Destroy(Deleteobj); // ÁöÁ¤µÈ ¿ÀºêÁ§Æ® »èÁ¦
+                    Destroy(Deleteobj); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
                 }
 
-                // FireEx ½ºÅ©¸³Æ® È°¼ºÈ­
+                // FireEx ï¿½ï¿½Å©ï¿½ï¿½Æ® È°ï¿½ï¿½È­
                 if (fireExScript != null)
                 {
                     fireExScript.Activate();
@@ -36,11 +36,11 @@ public class PlayerFireEx : MonoBehaviour
             }
             else
             {
-                ReleaseObject(); // ¿ÀºêÁ§Æ® ³»·Á³õ±â
+                ReleaseObject(); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             }
         }
     }
-    // Æ¯Á¤ Æ®¸®°Å ¹üÀ§¿¡ µé¾î°¬À» ¶§ isInTrigger¸¦ true·Î ¼³Á¤
+    // Æ¯ï¿½ï¿½ Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½î°¬ï¿½ï¿½ ï¿½ï¿½ isInTriggerï¿½ï¿½ trueï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "EX")
@@ -48,7 +48,7 @@ public class PlayerFireEx : MonoBehaviour
             isInTrigger = true;
         }
     }
-    // Æ¯Á¤ Æ®¸®°Å ¹üÀ§¸¦ ¹þ¾î³µÀ» ¶§ isInTrigger¸¦ false·Î ¼³Á¤
+    // Æ¯ï¿½ï¿½ Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½î³µï¿½ï¿½ ï¿½ï¿½ isInTriggerï¿½ï¿½ falseï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     void OnTriggerExit(Collider other)
     {
         if (other.gameObject.tag == "EX")
@@ -62,20 +62,20 @@ public class PlayerFireEx : MonoBehaviour
         GameObject player = GameObject.FindWithTag("Player");
         if (player != null)
         {
-            Transform gunTransform = player.transform.Find("Gun");// ÃÑ À§Ä¡ Ã£±â
+            Transform gunTransform = player.transform.Find("Gun");// ï¿½ï¿½ ï¿½ï¿½Ä¡ Ã£ï¿½ï¿½
             if (gunTransform != null)
             {
-                // ¿ÀºêÁ§Æ®ÀÇ X Ãà È¸Àü°ªÀ» À¯Áö
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ X ï¿½ï¿½ È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 float originalXRotation = objectToPlace.transform.eulerAngles.x;
-                // ÃÑ À§Ä¡¿¡ ¿ÀºêÁ§Æ® ¹èÄ¡
+                // ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½Ä¡
                 objectToPlace.transform.SetParent(gunTransform);
                 objectToPlace.transform.localPosition = Vector3.zero;
-                // X Ãà È¸Àü°ªÀ» À¯ÁöÇÏ¸é¼­ ÃÑ À§Ä¡ÀÇ È¸Àü°ªÀ» Àû¿ë
+                // X ï¿½ï¿½ È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸é¼­ ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 Vector3 newRotation = gunTransform.eulerAngles;
                 newRotation.x = originalXRotation;
                 objectToPlace.transform.eulerAngles = newRotation;
 
-                // CharMove ÄÄÆ÷³ÍÆ®¸¦ ÅëÇØ ¼Óµµ ¼³Á¤ (¿ÀºêÁ§Æ® µé¾úÀ» ¶§ ¼Óµµ Á¶Á¤)
+                // CharMove ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Óµï¿½ ï¿½ï¿½ï¿½ï¿½)
                 CharMove charMove = player.GetComponent<CharMove>();
                 if (charMove != null)
                 {
@@ -84,45 +84,45 @@ public class PlayerFireEx : MonoBehaviour
             }
             else
             {
-                Debug.LogError("Gun ¿ÀºêÁ§Æ®¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.");
+                Debug.LogError("Gun ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
             }
         }
         else
         {
-            Debug.LogError("Player ÅÂ±×¸¦ °¡Áø ¿ÀºêÁ§Æ®¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.");
+            Debug.LogError("Player ï¿½Â±×¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
         }
     }
 
-    // ¿ÀºêÁ§Æ®¸¦ ³»·Á³õ´Â ¸Þ¼­µå
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½
     void ReleaseObject()
     {
-        objectToPlace.transform.SetParent(null); // ºÎ¸ð ÇØÁ¦ÇÏ¿© µ¶¸³µÈ ¿ÀºêÁ§Æ®·Î ¸¸µê
+        objectToPlace.transform.SetParent(null); // ï¿½Î¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-        // targetObject À§Ä¡·Î ¿ÀºêÁ§Æ® ¹èÄ¡
+        // targetObject ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½Ä¡
         if (targetObject != null)
         {
             objectToPlace.transform.position = targetObject.transform.position;
         }
         else
         {
-            Debug.LogWarning("targetObject°¡ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
-            objectToPlace.transform.position = new Vector3(0, 1, 0); // ±âº» À§Ä¡·Î ¼³Á¤
+            Debug.LogWarning("targetObjectï¿½ï¿½ ï¿½Ò´ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ò½ï¿½ï¿½Ï´ï¿½.");
+            objectToPlace.transform.position = new Vector3(0, 1, 0); // ï¿½âº» ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         }
 
-        // FireEx ½ºÅ©¸³Æ® ºñÈ°¼ºÈ­
+        // FireEx ï¿½ï¿½Å©ï¿½ï¿½Æ® ï¿½ï¿½È°ï¿½ï¿½È­
         if (fireExScript != null)
         {
             fireExScript.Deativate();
         }
 
-        // CharMove ¼Óµµ¸¦ ¿ø·¡ °ªÀ¸·Î º¹±¸
+        // CharMove ï¿½Óµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         GameObject player = GameObject.FindWithTag("Player");
         if (player != null)
         {
             CharMove charMove = player.GetComponent<CharMove>();
             if (charMove != null)
             {
-                charMove.SetSpeed(4f); // ¿ø·¡ ¼Óµµ·Î º¹±¸
+                charMove.SetSpeed(4f); // ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             }
         }
     }

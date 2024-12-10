@@ -1,97 +1,208 @@
 using UnityEngine;
 using UnityEngine.UI;
-
+using System.Collections;
+using System.Collections.Generic;
 public class SimplePlayUI : MonoBehaviour
 {
-    // UI 요소: 일시정지, 재개, 볼륨 슬라이더, 체크박스
-    public Button btnPause; // 일시정지 버튼
-    public Button btnResume; // 재개 버튼
-    public Slider volumeSlider; // 볼륨 설정 슬라이더
-    public GameTimer gameTimer; // GameTimer 객체의 참조
+    [Header("버튼 설정")]
+    [SerializeField] private Button btnPause;         // 일시정지 버튼
+    [SerializeField] private Button btnResume;        // 재개 버튼
+    [SerializeField] private Slider volumeSlider;     // 볼륨 슬라이더
 
-    public Toggle checkbox1; // 체크박스 1
-    public Toggle checkbox2; // 체크박스 2
-    public GameObject panel; // 체크박스를 포함할 패널
+    [Header("체크박스 설정")]
+    [SerializeField] private Toggle fireCheckBox;     // 불 끄기 체크박스
+    [SerializeField] private Toggle doorCheckBox;     // 문 열림 체크박스
+    [SerializeField] private GameObject panel;        // 체크박스가 포함된 패널
 
-    private bool isPaused = false; // 일시정지 상태 확인용
+    [Header("게임 관련")]
+    [SerializeField] private GameTimer gameTimer;     // GameTimer 객체
+    [SerializeField] private GameManager gameManager; // GameManager 객체
+    [SerializeField] private FireSpawn fireSpawn;     // FireSpawn 객체
+    [SerializeField] private Door door;               // Door 객체
+     [Header("컷씬 이미지 리스트와 컷별 등장시간 설정")]
+    [SerializeField] private List<Image> cutSceneImages; // 컷씬 이미지 리스트 (UI Image)
+    [SerializeField] private float deactivateTime=3;
+    private int currentCutSceneIndex = 0; // 현재 활성화된 컷씬 인덱스
+    private bool isPaused = false; // 일시정지 상태
+    private bool gameClear = false; // 게임 클리어 상태
 
-    void Start()
+    
+
+    private void Start()
     {
         // UI 초기화
-        btnResume.gameObject.SetActive(false); // 초기에는 재개 버튼 비활성화
-        volumeSlider.gameObject.SetActive(false); // 초기에는 볼륨 슬라이더 비활성화
-        volumeSlider.value = AudioListener.volume; // 현재 볼륨을 슬라이더에 동기화
+        InitializeUI();
 
-        // 버튼과 슬라이더 이벤트 추가
+        // 버튼 이벤트 연결
         btnPause.onClick.AddListener(PauseGame);
         btnResume.onClick.AddListener(ResumeGame);
         volumeSlider.onValueChanged.AddListener(SetVolume);
 
-        // 체크박스 초기화 및 부모 패널에 추가
-        if (panel != null)
+        // 타이머 UI 주기적 갱신
+        if (gameTimer != null)
+            InvokeRepeating(nameof(UpdateTimerUI), 0f, 1f);
+            
+        if (cutSceneImages == null || cutSceneImages.Count == 0)
         {
-            // 체크박스 1 설정
-            checkbox1 = new GameObject("Checkbox1").AddComponent<Toggle>();
-            checkbox1.transform.SetParent(panel.transform); // Panel의 자식으로 설정
-            checkbox1.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -30); // 위치 설정
-            checkbox1.GetComponentInChildren<Text>().text = "옵션 1"; // 텍스트 설정
-
-            // 체크박스 2 설정
-            checkbox2 = new GameObject("Checkbox2").AddComponent<Toggle>();
-            checkbox2.transform.SetParent(panel.transform); // Panel의 자식으로 설정
-            checkbox2.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -60); // 위치 설정
-            checkbox2.GetComponentInChildren<Text>().text = "옵션 2"; // 텍스트 설정
+            Debug.LogError("컷씬 이미지 리스트가 비어있습니다!");
+            return;
         }
 
-        // 타이머 UI가 1초마다 갱신되도록 설정
-        if (gameTimer != null)
+        // 모든 이미지를 비활성화
+        foreach (var image in cutSceneImages)
         {
-            InvokeRepeating("UpdateTimerUI", 0f, 1f); // 1초 간격으로 UI 갱신
+            image.gameObject.SetActive(false);
+        }
+
+        // GameManager의 startT와 repeatT를 가져와 Coroutine 시작
+        float startTime = GameManager.Instance.startT;
+        float repeatInterval = GameManager.Instance.repeatT;
+
+        StartCoroutine(ActivateCutScenes(startTime, repeatInterval));
+    }
+
+    private void Update()
+    {
+        // 게임 상태 체크
+        CheckFireCount();
+        CheckDoorOpen();
+        CheckGameClear();
+    }
+
+    private void InitializeUI()
+    {
+        if (btnResume != null) btnResume.gameObject.SetActive(false);    // 재개 버튼 숨김
+        if (volumeSlider != null)
+        {
+            volumeSlider.gameObject.SetActive(false);                   // 볼륨 슬라이더 숨김
+            volumeSlider.value = AudioListener.volume;                  // 현재 볼륨 동기화
+        }
+
+        // 체크박스 초기화
+        if (fireCheckBox != null) fireCheckBox.isOn = false;             // Fire 체크박스 초기화
+        if (doorCheckBox != null) doorCheckBox.isOn = false;  
+        
+                   // Door 체크박스 초기화
+    }
+
+    // 불이 모두 꺼졌는지 확인
+    private void CheckFireCount()
+    {
+        if (fireSpawn != null && fireSpawn.fireCount == 0 && !fireCheckBox.isOn)
+        {
+            fireCheckBox.isOn = true; // 체크박스 활성화
+            Debug.Log("모든 불이 꺼졌습니다.");
         }
     }
 
-    void UpdateTimerUI()
+    // 문이 열렸는지 확인
+    private void CheckDoorOpen()
+    {
+        if (door != null && door.open && !doorCheckBox.isOn)
+        {
+            doorCheckBox.isOn = true; // 체크박스 활성화
+            Debug.Log("문이 열렸습니다.");
+        }
+    }
+
+    // 게임 클리어 상태 확인
+    private void CheckGameClear()
+    {
+        if (fireCheckBox.isOn && doorCheckBox.isOn && !gameClear)
+        {
+            gameClear = true;
+            gameManager?.EndGame(true); // 게임 종료
+            Debug.Log("게임 클리어!");
+        }
+    }
+
+    // 타이머 UI 갱신
+    private void UpdateTimerUI()
     {
         if (!isPaused && gameTimer != null && gameTimer.IsGameActive())
         {
-            gameTimer.UpdateTimerUI(); // 타이머 UI를 1초마다 갱신
+            gameTimer.UpdateTimerUI();
         }
     }
 
     // 게임 일시정지
-    void PauseGame()
+    private void PauseGame()
     {
         isPaused = true;
-        Time.timeScale = 0; // 게임 시간을 멈춤
-        gameTimer.PauseTimer(); // 타이머 정지
-        btnPause.gameObject.SetActive(false); // 일시정지 버튼 숨김
-        btnResume.gameObject.SetActive(true); // 재개 버튼 표시
-        volumeSlider.gameObject.SetActive(true); // 볼륨 슬라이더 표시
-        Debug.Log("게임 일시정지");
+        Time.timeScale = 0f; // 게임 멈춤
+        gameTimer?.PauseTimer(); // 타이머 멈춤
+        ToggleUIForPause(true); // UI 변경
+        Debug.Log("게임이 일시정지되었습니다.");
     }
 
     // 게임 재개
-    void ResumeGame()
+    private void ResumeGame()
     {
         isPaused = false;
-        Time.timeScale = 1; // 게임 시간을 정상 속도로 설정
-        gameTimer.StartTimer(); // 타이머 시작
-        btnPause.gameObject.SetActive(true); // 일시정지 버튼 표시
-        btnResume.gameObject.SetActive(false); // 재개 버튼 숨김
-        volumeSlider.gameObject.SetActive(false); // 볼륨 슬라이더 숨김
-        Debug.Log("게임 재개");
+        Time.timeScale = 1f; // 게임 재개
+        gameTimer?.StartTimer(); // 타이머 재개
+        ToggleUIForPause(false); // UI 변경
+        Debug.Log("게임이 재개되었습니다.");
     }
 
-    // 볼륨 설정 변경
-    void SetVolume(float volume)
+    // 볼륨 설정
+    private void SetVolume(float volume)
     {
         AudioListener.volume = volume;
-        Debug.Log("볼륨 설정 변경됨: " + volume);
+        Debug.Log($"볼륨이 {volume}로 설정되었습니다.");
     }
 
-    void OnDestroy()
+    // 일시정지 상태에서 UI 토글
+    private void ToggleUIForPause(bool isPaused)
     {
-        // 이 스크립트가 파괴될 때 InvokeRepeating 중지
-        CancelInvoke("UpdateTimerUI");
+        btnPause?.gameObject.SetActive(!isPaused); // 일시정지 버튼
+        btnResume?.gameObject.SetActive(isPaused); // 재개 버튼
+        volumeSlider?.gameObject.SetActive(isPaused); // 볼륨 슬라이더
     }
+
+    private void OnDestroy()
+    {
+        CancelInvoke(nameof(UpdateTimerUI)); // 타이머 갱신 중지
+    }
+     private IEnumerator ActivateCutScenes(float startDelay, float interval)
+    {
+        // 시작 딜레이
+        yield return new WaitForSeconds(startDelay);
+
+        // 람다식으로 컷씬 활성화 처리
+        System.Action<int> activateCutScene = (index) =>
+        {
+            
+            if (index >= 0 && index < cutSceneImages.Count)
+            {
+                cutSceneImages[index].gameObject.SetActive(true);
+                Debug.Log($"컷씬 {index} 활성화");
+            
+            StartCoroutine(DeactivateCutScene(index, deactivateTime));
+            }
+        };
+        
+
+        // 순차적으로 컷씬 활성화
+        while (currentCutSceneIndex < cutSceneImages.Count)
+        {
+            activateCutScene(currentCutSceneIndex);
+            currentCutSceneIndex++;
+
+            // 다음 컷씬을 활성화하기 전까지 대기
+            yield return new WaitForSeconds(interval);
+        }
+
+        Debug.Log("모든 컷씬이 활성화되었습니다.");
+    }
+    private IEnumerator DeactivateCutScene(int index, float delay)
+{
+    yield return new WaitForSeconds(delay);
+
+    if (index >= 0 && index < cutSceneImages.Count)
+    {
+        cutSceneImages[index].gameObject.SetActive(false);
+        Debug.Log($"컷씬 {index} 비활성화");
+    }
+}
 }
