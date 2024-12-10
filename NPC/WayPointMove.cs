@@ -4,45 +4,71 @@ using UnityEngine;
 
 public class WayPointMove : MonoBehaviour
 {
-    [SerializeField] Transform[] Pos;
-    [SerializeField] float speed = 5f;
-    int PosNum = 0;
+    public GameObject Subway_Floor;
+    private NavMeshAgent nvAgent;
+    private float minX;
+    private float maxX;
+    private float minZ;
+    private float maxZ;
+    public float repeatInterval = 10f;
+    private Transform tr;
+    private bool isAgentActive = false;
 
     void Start()
     {
-        StartCoroutine(StartMovementAfterDelay(6f)); // 6초 대기 후 이동 시작
+        nvAgent = GetComponent<NavMeshAgent>();
+        nvAgent.enabled = false;
+        Invoke("ActivateNavMeshAgent", 5f);
+        GetXBounds();
+        tr = GetComponent<Transform>();
     }
-
-    IEnumerator StartMovementAfterDelay(float delay)
+    public void GetXBounds()
     {
-        yield return new WaitForSeconds(delay);
-        transform.position = Pos[PosNum].position;
-        StartCoroutine(MovePath());
-    }
-
-    IEnumerator MovePath()
-    {
-        while (true)
+        if (Subway_Floor.TryGetComponent<Renderer>(out Renderer renderer))
         {
-            if (Pos.Length == 0)
-                yield break;
+            Bounds bounds = renderer.bounds;
+            minX = bounds.min.x;
+            maxX = bounds.max.x;
+            minZ = bounds.min.z;
+            maxZ = bounds.max.z;
 
-            transform.position = Vector3.MoveTowards(transform.position, Pos[PosNum].position, speed * Time.deltaTime);
-            transform.LookAt(Pos[PosNum].position);
-
-            if (Vector3.Distance(transform.position, Pos[PosNum].position) < 0.1f)
-            {
-                PosNum++;
-                if (PosNum == Pos.Length)
-                {
-                    PosNum = 0;
-                }
-            }
-
-            yield return null;
+            Debug.Log($"Min x: {minX}, Max x: {maxX}, Min z: {minZ}, Max z: {maxZ}");
+        }
+        else
+        {
+            Debug.LogError("Renderer가 없습니다. Bounds를 확인할 수 없습니다.");
+        }
+    }
+    private void Update()
+    {
+        if (isAgentActive && !nvAgent.pathPending && nvAgent.remainingDistance <= nvAgent.stoppingDistance)
+        {
+            GoNextDestination();
         }
     }
 
-    // Update는 이제 필요하지 않습니다.
-    // void Update() { }
+    private void ActivateNavMeshAgent()
+    {
+        nvAgent.enabled = true; // NavMeshAgent 활성화
+        isAgentActive = true; // 활성화 상태 설정
+        GoNextDestination(); // 첫 목적지 설정
+    }
+
+    private void GoNextDestination()
+    {
+        float randomX = UnityEngine.Random.Range(minX, maxX);
+        float randomZ = UnityEngine.Random.Range(minZ, maxZ);
+        Vector3 randomPosition = new Vector3(randomX, tr.position.y, randomZ);
+
+        if (NavMesh.SamplePosition(randomPosition, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
+        {
+            nvAgent.SetDestination(hit.position);
+            Debug.Log($"새 목적지: {hit.position}");
+        }
+        else
+        {
+            Debug.Log($"새 목적지: 설정이 안되었습니다.");
+        }
+    }
+
 }

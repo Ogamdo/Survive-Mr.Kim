@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class NPCMove : MonoBehaviour
 {
+
+
     Animator anim;
 
     void Awake()
@@ -13,18 +15,12 @@ public class NPCMove : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(SetNPCMTrueAfterDelay(6f)); // 6초 대기 후 anim.SetBool("NPCM", true) 실행
+        StartCoroutine(SetNPCMTrueAfterDelay(5f));
     }
 
     IEnumerator SetNPCMTrueAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
         anim.SetBool("NPCM", true);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

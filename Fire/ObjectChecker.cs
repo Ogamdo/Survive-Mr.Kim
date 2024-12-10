@@ -3,37 +3,48 @@ using UnityEngine;
 
 public class ObjectChecker : MonoBehaviour
 {
-    public GameObject targetObject; // 삭제할 게임 오브젝트
+    public GameObject parentObject;
+    public GameObject circle;
     private bool shouldCheck = false;
 
     void Start()
     {
-        // 게임 시작 후 20초 뒤에 자식 오브젝트가 존재하는지 확인 시작
         StartCoroutine(InitialWait());
     }
 
     void Update()
     {
-        if (shouldCheck && targetObject != null)
+        if (shouldCheck)
         {
-            // 자식 오브젝트가 존재하지 않으면 targetObject 삭제
-            if (transform.childCount == 0)
+            if (parentObject != null)
             {
-                Debug.Log("Target object has no children, deleting...");
-                Destroy(targetObject);
-                shouldCheck = false; // 오브젝트가 삭제되면 검사 중지
+                if (parentObject.transform.childCount == 0)
+                {
+                    Debug.Log("Parent object has no children.");
+
+                    if (circle != null && !circle.activeSelf)
+                    {
+                        circle.SetActive(true);
+                        Debug.Log($"Circle 활성화 완료: {circle.name} 위치 {circle.transform.position}");
+                    }
+                    shouldCheck = false;
+                }
+                else
+                {
+                    Debug.Log("Parent object still has children.");
+                }
             }
             else
             {
-                Debug.Log("Target object has children.");
+                Debug.LogError("Parent object가 연결되지 않았습니다!");
+                shouldCheck = false;
             }
         }
     }
 
     IEnumerator InitialWait()
     {
-        // 20초 대기
-        yield return new WaitForSeconds(20f);
-        shouldCheck = true; // 20초 후 검사 시작
+        yield return new WaitForSeconds(5f);
+        shouldCheck = true;
     }
 }

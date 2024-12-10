@@ -10,7 +10,7 @@ public class RiderMove : MonoBehaviour
     private NavMeshAgent nav;
     public float minX;
     public float maxX;
-    public float minZ;  
+    public float minZ;
     public float maxZ;
     private Transform tr;
 
@@ -41,7 +41,7 @@ public class RiderMove : MonoBehaviour
 
     private void Update()
     {
-        if(!nav.pathPending && nav.remainingDistance <= nav.stoppingDistance)
+        if (!nav.pathPending && nav.remainingDistance <= nav.stoppingDistance)
         {
             GoBycicleVillan();
         }
@@ -49,9 +49,9 @@ public class RiderMove : MonoBehaviour
 
     private void GoBycicleVillan()
     {
-        float RandomX = UnityEngine.Random.Range( minX, maxX );
-        float RandomZ = UnityEngine.Random.Range( minZ, maxZ );
-        Vector3 RandomPosition = new Vector3( RandomX, tr.position.y,RandomZ);
+        float RandomX = UnityEngine.Random.Range(minX, maxX);
+        float RandomZ = UnityEngine.Random.Range(minZ, maxZ);
+        Vector3 RandomPosition = new Vector3(RandomX, tr.position.y, RandomZ);
         if (NavMesh.SamplePosition(RandomPosition, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
         {
             Debug.Log($"유효한 위치: {hit.position}");
