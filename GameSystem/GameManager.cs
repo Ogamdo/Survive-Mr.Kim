@@ -5,8 +5,8 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     [Header("빌런 설정")]
-    [SerializeField] private float startT = 15f; // 빌런 스폰 시작 시간
-    [SerializeField] private float repeatT = 15f; // 빌런 스폰 간격
+    [SerializeField] public float startT = 15f; // 빌런 스폰 시작 시간
+    [SerializeField] public float repeatT = 15f; // 빌런 스폰 간격
     [SerializeField] private List<GameObject> villains = new List<GameObject>(); // 빌런 오브젝트 리스트
 
     [Header("클리어 및 사망 UI")]
