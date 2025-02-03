@@ -3,37 +3,48 @@ using UnityEngine;
 
 public class ObjectChecker : MonoBehaviour
 {
-    public GameObject targetObject; // »èÁ¦ÇÒ °ÔÀÓ ¿ÀºêÁ§Æ®
+    public GameObject parentObject;
+    public GameObject circle;
     private bool shouldCheck = false;
 
     void Start()
     {
-        // °ÔÀÓ ½ÃÀÛ ÈÄ 20ÃÊ µÚ¿¡ ÀÚ½Ä ¿ÀºêÁ§Æ®°¡ Á¸ÀçÇÏ´ÂÁö È®ÀÎ ½ÃÀÛ
         StartCoroutine(InitialWait());
     }
 
     void Update()
     {
-        if (shouldCheck && targetObject != null)
+        if (shouldCheck)
         {
-            // ÀÚ½Ä ¿ÀºêÁ§Æ®°¡ Á¸ÀçÇÏÁö ¾ÊÀ¸¸é targetObject »èÁ¦
-            if (transform.childCount == 0)
+            if (parentObject != null)
             {
-                Debug.Log("Target object has no children, deleting...");
-                Destroy(targetObject);
-                shouldCheck = false; // ¿ÀºêÁ§Æ®°¡ »èÁ¦µÇ¸é °Ë»ç ÁßÁö
+                if (parentObject.transform.childCount == 0)
+                {
+                    Debug.Log("Parent object has no children.");
+
+                    if (circle != null && !circle.activeSelf)
+                    {
+                        circle.SetActive(true);
+                        Debug.Log($"Circle í™œì„±í™” ì™„ë£Œ: {circle.name} ìœ„ì¹˜ {circle.transform.position}");
+                    }
+                    shouldCheck = false;
+                }
+                else
+                {
+                    Debug.Log("Parent object still has children.");
+                }
             }
             else
             {
-                Debug.Log("Target object has children.");
+                Debug.LogError("Parent objectê°€ ì—°ê²°ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤!");
+                shouldCheck = false;
             }
         }
     }
 
     IEnumerator InitialWait()
     {
-        // 20ÃÊ ´ë±â
-        yield return new WaitForSeconds(20f);
-        shouldCheck = true; // 20ÃÊ ÈÄ °Ë»ç ½ÃÀÛ
+        yield return new WaitForSeconds(5f);
+        shouldCheck = true;
     }
 }
