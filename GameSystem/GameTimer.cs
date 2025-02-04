@@ -10,8 +10,8 @@ public class GameTimer : MonoBehaviour
     [Tooltip("남은 시간을 표시할 텍스트 컴포넌트")]
     public Text timerText; // 타이머 UI 텍스트
 
-    private bool isGameActive = false; // 타이머 활성화 여부
-    private float currentPlayTime; // 현재 남은 시간
+    public bool isGameActive = false; // 타이머 활성화 여부
+    public float currentPlayTime; // 현재 남은 시간
 
     void Start()
     {
@@ -45,7 +45,7 @@ public class GameTimer : MonoBehaviour
     /// <summary>
     /// 남은 시간을 UI에 업데이트 (초 단위).
     /// </summary>
-    private void UpdateTimerUI()
+    public void UpdateTimerUI()
     {
         if (timerText != null)
         {
